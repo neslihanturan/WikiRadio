@@ -1,9 +1,6 @@
-package nes.com.audiostreamer.model.gson;
+package wikiradio.neslihan.tur.org.wikiradio.data.pojo;
 
 import com.google.gson.annotations.SerializedName;
-
-import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonContinue;
-import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonQuery;
 
 
 /**
