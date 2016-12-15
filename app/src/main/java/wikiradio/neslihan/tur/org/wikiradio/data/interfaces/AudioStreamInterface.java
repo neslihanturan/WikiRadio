@@ -6,7 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Url;
 
 /**
- * Interface for retrofit service to get stream of an audio in given url
+ * Interface for retrofit service to get AUDIO_STREAM of an audio in given url
  */
 
 public interface AudioStreamInterface extends RetrofitMarkerInterface {
