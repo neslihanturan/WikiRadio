@@ -9,7 +9,7 @@ import retrofit2.http.Url;
  * Interface for retrofit service to get AUDIO_STREAM of an audio in given url
  */
 
-public interface AudioStreamInterface extends RetrofitMarkerInterface {
+public interface AudioStreamInterface{
     //Base url will be ignored for this case
     @GET
     //Urls are determined in runtime so used @Url anotation

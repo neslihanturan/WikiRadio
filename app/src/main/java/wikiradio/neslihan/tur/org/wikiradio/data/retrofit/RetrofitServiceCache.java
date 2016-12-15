@@ -13,12 +13,11 @@ import wikiradio.neslihan.tur.org.wikiradio.data.interfaces.RetrofitMarkerInterf
  */
 
 public class RetrofitServiceCache {
-    static RetrofitMarkerInterface INSTANCE;
     private static MwAPIInterface MwINSTANCE;
     private static AudioStreamInterface AsINSTANCE;
     private static RestfulAPIInterface RestINSTANCE;
 
-    public static RetrofitMarkerInterface getService(String baseURL, String strategy){
+    public static Object getService(String baseURL, String strategy){
         //case: getting summaries from en.wikipedia.org with restful api
         if(baseURL.equals(Constant.EN_WIKIPEDIA_BASE_URL) && strategy.equals(Constant.REST_API)){
             if(RestINSTANCE == null){
@@ -26,7 +25,7 @@ public class RetrofitServiceCache {
                                     .getClient().create(InterfaceSelector
                                     .getInterfaceClass(strategy));
             }
-            INSTANCE = RestINSTANCE;
+            return RestINSTANCE;
         }
         //case: getting category and audio informations from commons with mediawikiAPI
         else if(baseURL.equals(Constant.COMMONS_BASE_URL) && strategy.equals(Constant.MEDIA_WIKI_API)){
@@ -35,7 +34,7 @@ public class RetrofitServiceCache {
                                 .getClient().create(InterfaceSelector
                                 .getInterfaceClass(strategy));
             }
-            INSTANCE = MwINSTANCE;
+            return MwINSTANCE;
         }
         //case: getting audio stream from commons
         else if(baseURL.equals(Constant.COMMONS_BASE_URL) && strategy.equals(Constant.AUDIO_STREAM)){
@@ -44,11 +43,12 @@ public class RetrofitServiceCache {
                                 .getClient().create(InterfaceSelector
                                 .getInterfaceClass(strategy));
             }
-            INSTANCE = AsINSTANCE;
+            return AsINSTANCE;
         }
         else{
             //problem
+            return null;
         }
-        return INSTANCE;
+
     }
 }

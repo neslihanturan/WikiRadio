@@ -9,7 +9,7 @@ import wikiradio.neslihan.tur.org.wikiradio.data.pojo.RestfulJsonObject;
  * Interface for retrofit service to get summaries from wikipedia files randomly.
  */
 
-public interface RestfulAPIInterface extends RetrofitMarkerInterface{
+public interface RestfulAPIInterface{
     @Headers({                              //TODO: Add interceptor with okhttp3 for pass header to all requests
             "User-Agent: AudioStreamerAndroidApp/tur.neslihan@gmail.com"
     })

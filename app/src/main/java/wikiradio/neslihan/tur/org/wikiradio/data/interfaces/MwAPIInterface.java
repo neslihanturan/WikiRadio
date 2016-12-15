@@ -10,7 +10,7 @@ import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonObject;
  * Interface for retrofit service to get all possible audio included categories and random audio files from those categories.
  */
 
-public interface MwAPIInterface extends RetrofitMarkerInterface {
+public interface MwAPIInterface{
     @Headers({                              //TODO: Add interceptor with okhttp3 for pass header to all requests
             "User-Agent: AudioStreamerAndroidApp/tur.neslihan@gmail.com"
     })
