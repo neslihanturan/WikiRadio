@@ -16,7 +16,7 @@ public class RadioActivity extends AppCompatActivity implements CategoryListCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
 
-        DataUtils.getRandomCategory(this);
+        DataUtils.getRandomCategory("",this);
     }
 
     @Override
@@ -24,6 +24,7 @@ public class RadioActivity extends AppCompatActivity implements CategoryListCall
         for (String s : categoryList){
             Log.d(LOG_TAG,s);
         }
+        Log.d(LOG_TAG,categoryList.size()+"");
     }
     @Override
     public void onError() {

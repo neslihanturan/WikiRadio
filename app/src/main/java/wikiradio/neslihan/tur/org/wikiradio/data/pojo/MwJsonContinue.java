@@ -7,15 +7,42 @@ public class MwJsonContinue{
     @SerializedName("continue")
     private String continueField;
 
+    private String psoffset;
+
+    public String getContinueField() {
+        return continueField;
+    }
+
+    public void setContinueField(String continueField) {
+        this.continueField = continueField;
+    }
+
+    public void setPsoffset(String psoffset) {
+        this.psoffset = psoffset;
+    }
+
     public String getPsoffset ()
     {
+        return psoffset;
+    }
+
+    public String getGaccontinue() {
         return gaccontinue;
     }
 
-    public void setPsoffset (String psoffset)
+    public void setGaccontinue(String gaccontinue) {
+        this.gaccontinue = gaccontinue;
+    }
+
+    /*public String getPsoffset ()
+    {
+        return gaccontinue;
+    }*/
+
+    /*public void setPsoffset (String psoffset)
     {
         this.gaccontinue = psoffset;
-    }
+    }*/
 
     public String getContinue ()
     {

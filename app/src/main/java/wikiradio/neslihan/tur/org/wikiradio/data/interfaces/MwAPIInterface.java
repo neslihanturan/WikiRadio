@@ -14,8 +14,11 @@ public interface MwAPIInterface{
     @Headers({                              //TODO: Add interceptor with okhttp3 for pass header to all requests
             "User-Agent: AudioStreamerAndroidApp/tur.neslihan@gmail.com"
     })
-    @GET("w/api.php?action=query&continue=gaccontinue||&generator=allcategories&gacprefix=Audio files&gacmin=1&gaclimit=500&&gacprop=size&format=json")
-    Call<MwJsonObject> getRelevantCategories(@Query("gaccontinue") String _continue);
+    //@GET("w/api.php?action=query&continue=gaccontinue||&generator=allcategories&gacprefix=Audio files&gacmin=1&gaclimit=500&&gacprop=size&format=json")
+    @GET("w/api.php?action=query&list=prefixsearch&pssearch=Category:Audio%20files&pslimit=500&format=json")
+
+    Call<MwJsonObject> getRelevantCategories(@Query("psoffset") String psoffset);
+    //Call<MwJsonObject> getRelevantCategories(@Query("gaccontinue") String _continue);
 
 
     @Headers({                              //TODO: Add interceptor with okhttp3 for pass header to all requests

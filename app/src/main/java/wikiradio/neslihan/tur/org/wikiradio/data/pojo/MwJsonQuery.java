@@ -1,5 +1,6 @@
 package wikiradio.neslihan.tur.org.wikiradio.data.pojo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,6 +9,15 @@ import java.util.Map;
 
 public class MwJsonQuery {
     public Map<String, MwJsonPage> pages;
+    private List<MwJsonPrefixsearch> prefixsearch = null;
+
+    public List<MwJsonPrefixsearch> getPrefixsearch() {
+        return prefixsearch;
+    }
+
+    public void setPrefixsearch(List<MwJsonPrefixsearch> prefixsearch) {
+        this.prefixsearch = prefixsearch;
+    }
 
 
     public Map<String, MwJsonPage> getPages() {
