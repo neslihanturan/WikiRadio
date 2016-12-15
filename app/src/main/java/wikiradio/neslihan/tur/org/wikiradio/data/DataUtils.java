@@ -48,4 +48,33 @@ public class DataUtils {
             }
         });
     }
+    public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){
+        Call<MwJsonObject> commonsQueryResponse = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
+                Constant.MEDIA_WIKI_API))
+                .getRelevantCategories2(gaccontinue);
+        commonsQueryResponse.enqueue(new Callback<MwJsonObject>() {
+            @Override
+            public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
+                //if continue, recursive call with new psoffset
+                if(response.body().getContinueField()!=null){
+                    if(response.body().getContinueField().getGaccontinue()!=null)
+                        getRandomCategory2(response.body().getContinueField().getGaccontinue(),callback);
+                    return;
+                }
+                Log.d(LOG_TAG,"getRandomCategory2 method onResponse");
+                ArrayList<String> categoryList = new ArrayList<>();
+                for(String key: response.body().getQuery().getPages().keySet()){
+                    //Log.d("i","gson "+response.body().getQuery().getPages().get(key).getTitle());
+                    categoryList.add(response.body().getQuery().getPages().get(key).getTitle());
+                }
+                Log.d(LOG_TAG,"getRandomCategory2 is finishing, RandomCategoryCallback is "+callback);
+                callback.onSuccess(categoryList);
+                Log.d(LOG_TAG,"getRandomCategory2 method is finished, CategoryListCallback.onSuccess method has been thrown");
+            }
+            @Override
+            public void onFailure(Call<MwJsonObject> call, Throwable t) {
+                Log.d(LOG_TAG,"getRandomCategory2 method is finished, CategoryListCallback2.onFailure method has been thrown");
+            }
+        });
+    }
 }

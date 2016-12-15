@@ -4,6 +4,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
@@ -16,7 +18,8 @@ public class RadioActivity extends AppCompatActivity implements CategoryListCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
 
-        DataUtils.getRandomCategory("",this);
+        //DataUtils.getRandomCategory("",this);
+        DataUtils.getRandomCategory2("",this);
     }
 
     @Override
@@ -26,6 +29,8 @@ public class RadioActivity extends AppCompatActivity implements CategoryListCall
         }
         Log.d(LOG_TAG,categoryList.size()+"");
     }
+
+
     @Override
     public void onError() {
 
