@@ -23,7 +23,7 @@ public interface MwAPIInterface{
     @Headers({                              //TODO: Add interceptor with okhttp3 for pass header to all requests
             "User-Agent: AudioStreamerAndroidApp/tur.neslihan@gmail.com"
     })
-    @GET("w/api.php?action=query&generator=categorymembers&gcmtype=file&prop=info|imageinfo&format=json&gcmlimit=100&iiprop=url|user|canonicaltitle|mime|mediatype")
+    @GET("w/api.php?action=query&generator=categorymembers&gcmtype=file&prop=info|imageinfo&format=json&gcmlimit=100&iiprop=size|url|user|canonicaltitle|mime|mediatype")
     Call<MwJsonObject> getRandomAudio(@Query("gcmtitle") String categoryTitle);
 
     /*
