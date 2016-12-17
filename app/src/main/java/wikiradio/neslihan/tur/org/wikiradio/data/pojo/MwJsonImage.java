@@ -19,6 +19,8 @@ public class MwJsonImage {
 
     private String url;
 
+    private int size;
+
     public String getDescriptionurl ()
     {
         return descriptionurl;
@@ -87,6 +89,15 @@ public class MwJsonImage {
     public void setUrl (String url)
     {
         this.url = url;
+    }
+
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 
     @Override
