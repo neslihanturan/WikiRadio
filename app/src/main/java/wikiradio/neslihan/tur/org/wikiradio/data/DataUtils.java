@@ -26,7 +26,7 @@ public class DataUtils {
         Call<MwJsonObject> commonsQueryResponse = mwAPIInterface
                                                     .getRelevantCategories(psoffset);
 
-        Log.d(LOG_TAG,)
+        Log.d(LOG_TAG,mwAPIInterface.toString());
 
         commonsQueryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
