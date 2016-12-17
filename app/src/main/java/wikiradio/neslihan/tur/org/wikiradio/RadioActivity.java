@@ -18,23 +18,18 @@ public class RadioActivity extends AppCompatActivity implements CategoryListCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
 
-        long startTime = System.currentTimeMillis();
-        DataUtils.getRandomCategory2("",this);
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-        Log.d(LOG_TAG,"elapsed time1: "+elapsedTime );
+        double startTime = System.currentTimeMillis();
+        DataUtils.getRandomCategory("",this);
+        double stopTime = System.currentTimeMillis();
+        double elapsedTime = stopTime - startTime;
+        Log.d(LOG_TAG,"elapsed time first call: "+elapsedTime );
 
         startTime = System.currentTimeMillis();
         DataUtils.getRandomCategory("",this);
         stopTime = System.currentTimeMillis();
         elapsedTime = stopTime - startTime;
-        Log.d(LOG_TAG,"elapsed time1: "+elapsedTime );
+        Log.d(LOG_TAG,"elapsed time second call: "+elapsedTime );
 
-        startTime = System.currentTimeMillis();
-        DataUtils.getRandomCategory2("",this);
-        stopTime = System.currentTimeMillis();
-        elapsedTime = stopTime - startTime;
-        Log.d(LOG_TAG,"elapsed time2: "+elapsedTime );
     }
 
     @Override

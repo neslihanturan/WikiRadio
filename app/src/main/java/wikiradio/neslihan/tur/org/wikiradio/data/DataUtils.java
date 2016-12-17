@@ -21,9 +21,13 @@ import wikiradio.neslihan.tur.org.wikiradio.data.retrofit.RetrofitServiceCache;
 public class DataUtils {
     private static String LOG_TAG = DataUtils.class.getName();
     public static void getRandomCategory(String psoffset, final CategoryListCallback callback){
-        Call<MwJsonObject> commonsQueryResponse = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
-                                                    Constant.MEDIA_WIKI_API))
+        MwAPIInterface mwAPIInterface = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
+                                        Constant.MEDIA_WIKI_API));
+        Call<MwJsonObject> commonsQueryResponse = mwAPIInterface
                                                     .getRelevantCategories(psoffset);
+
+        Log.d(LOG_TAG,)
+
         commonsQueryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
             public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
@@ -48,7 +52,7 @@ public class DataUtils {
             }
         });
     }
-    public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){
+    /*public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){
         Call<MwJsonObject> commonsQueryResponse = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                 Constant.MEDIA_WIKI_API))
                 .getRelevantCategories2(gaccontinue);
@@ -76,5 +80,5 @@ public class DataUtils {
                 Log.d(LOG_TAG,"getRandomCategory2 method is finished, CategoryListCallback2.onFailure method has been thrown");
             }
         });
-    }
+    }*/
 }
