@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 public interface CategoryListCallback {
     void onSuccess(ArrayList<String> categoryList);
-    void onError();
+    void onError(Class sender);
 }

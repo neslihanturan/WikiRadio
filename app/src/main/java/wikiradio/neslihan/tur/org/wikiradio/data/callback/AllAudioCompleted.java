@@ -3,10 +3,10 @@ package wikiradio.neslihan.tur.org.wikiradio.data.callback;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 
 /**
- * Call when get audio information data process end with success or error
+ * Created by nesli on 18.12.2016.
  */
 
-public interface AudioInfoCallbak {
-    void onSuccess(AudioFile audioFile, Class sender);
+public interface AllAudioCompleted {
+    void onSuccess(Class sender);
     void onError(Class sender);
 }
