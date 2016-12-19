@@ -3,15 +3,15 @@ package wikiradio.neslihan.tur.org.wikiradio.data;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
-import wikiradio.neslihan.tur.org.wikiradio.data.callback.AllAudioCompleted;
-import wikiradio.neslihan.tur.org.wikiradio.data.callback.AllAudioInfo;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
 import wikiradio.neslihan.tur.org.wikiradio.data.interfaces.MwAPIInterface;
@@ -30,7 +30,7 @@ public class DataUtils {
 
     private static String LOG_TAG = DataUtils.class.getName();
 
-    public static void getRandomCategory(final ArrayList<String> previous, String psoffset, final CategoryListCallback callback){
+    public static void getRandomCategory(final HashSet<String> previous, String psoffset, final CategoryListCallback callback){
         MwAPIInterface mwAPIInterface = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                                         Constant.MEDIA_WIKI_API));
         Call<MwJsonObject> queryResponse = mwAPIInterface
@@ -68,10 +68,14 @@ public class DataUtils {
         });
     }
 
-    public static void getRandomAudio(final List<String> categoryList, final AudioInfoCallbak callback){
+    //TODO: add continuation example:Category:Audio files of cantillation
+    public static void getRandomAudio(final Set<String> categorySet, final AudioInfoCallbak callback){
         //get random category title from all possible categories
+        List<String> categoryList = new ArrayList<>();
         Random randomGenerator = new Random();
-        int index = randomGenerator.nextInt(categoryList.size());
+        int index = randomGenerator.nextInt(categorySet.size());
+
+        categoryList.addAll(categoryList);  //to be able to get indexth element. It is not possible in set without iterating whole list
         final String categoryTitle = categoryList.get(index);
         MwAPIInterface mwAPIInterface = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                                             Constant.MEDIA_WIKI_API));
@@ -85,7 +89,7 @@ public class DataUtils {
                 Log.d(LOG_TAG,"getRandomAudio method is on response");
                 //case: category empty , this may happens when category is redirected
                 if(response.body().getQuery()==null){
-                    getRandomAudio(categoryList, callback); //recursive call to re-randomize
+                    getRandomAudio(categorySet, callback); //recursive call to re-randomize
                     return;
                 }
                 else{
@@ -93,6 +97,8 @@ public class DataUtils {
                     AudioFile audioFile = new AudioFile();
                     //random audio from category
                     Random generator = new Random();
+                    //get request url, get gcmtitle parameter which is category title
+                    String categoryTitle = call.request().url().queryParameter("gcmtitle");
                     Object[] values = response.body().getQuery().getPages().values().toArray();
                     Object randomValue = values[generator.nextInt(values.length)];
 
@@ -114,8 +120,8 @@ public class DataUtils {
 
     }
 
-    public static void getAllAudioFiles(final List<String> categoryList, final AllAudioInfo callback, final AllAudioCompleted allAudioCompleted) {
-        final String lastCategoryTitle = categoryList.get(categoryList.size()-1);
+    //TODO: add continuation
+    public static void getAllAudioFiles(final Set<String> categoryList, final AudioInfoCallbak callback) {
         MwAPIInterface mwAPIInterface = ((MwAPIInterface) RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                 Constant.MEDIA_WIKI_API));
         for (final String categoryTitle : categoryList) {
@@ -126,36 +132,27 @@ public class DataUtils {
                 @Override
                 public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
                     if (response.body().getQuery() == null) {
-                        //emptyCategories.add(categoryTitle);
-                        callback.onSuccess(null, AllAudioInfo.class);
-                        Log.d(LOG_TAG, "empty category occured" + categoryTitle);
+                        callback.onSuccess(null, AudioInfoCallbak.class);
                     } else {
                         Object[] values = response.body().getQuery().getPages().values().toArray();
+                        //get request url, get gcmtitle parameter which is category title
+                        String categoryTitle=call.request().url().queryParameter("gcmtitle");
                         for(Object obj: values){
-
-                            //to store selected audio
+                            //Store selected audio in an object
                             AudioFile audioFile = new AudioFile();
-                            //Log.d(LOG_TAG, "getAllAudioFiles selected image info: " + ((MwJsonPage) obj).getImageinfo()[0].toString());
                             audioFile.setUrl(((MwJsonPage) obj).getImageinfo()[0].getUrl());
                             audioFile.setTitle(((MwJsonPage) obj).getImageinfo()[0].getCanonicaltitle());
                             audioFile.setCategory(categoryTitle);
                             audioFile.setSize(((MwJsonPage) obj).getImageinfo()[0].getSize());
-                            //Log.d(LOG_TAG, "getAllAudioFiles is finishing, RandomAudioCallback is:" + callback);
-                            callback.onSuccess(audioFile, AllAudioInfo.class);    //true means valid category
+                            callback.onSuccess(audioFile, AudioInfoCallbak.class);
                         }
                     }
-                    if(categoryTitle.equals(lastCategoryTitle)){
-                        allAudioCompleted.onSuccess(AllAudioCompleted.class);
-                    }
                 }
-
                 @Override
                 public void onFailure(Call<MwJsonObject> call, Throwable t) {
-                    callback.onError(AllAudioInfo.class);
+                    callback.onError(AudioInfoCallbak.class);
                 }
             });
-
-
         }
     }
     /*public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){

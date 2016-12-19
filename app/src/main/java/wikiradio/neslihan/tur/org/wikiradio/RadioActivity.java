@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
-import wikiradio.neslihan.tur.org.wikiradio.data.callback.AllAudioInfo;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
 import wikiradio.neslihan.tur.org.wikiradio.data.statistic.Measurement;
@@ -33,6 +32,7 @@ public class RadioActivity extends AppCompatActivity{
 
         //double startTime = System.currentTimeMillis();
         Measurement measurement = new Measurement();
+        measurement.prepareReport(true);
         //double stopTime = System.currentTimeMillis();
         //double elapsedTime = stopTime - startTime;
         //Log.d(LOG_TAG,"elapsed time first call: "+elapsedTime );
