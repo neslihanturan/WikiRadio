@@ -1,5 +1,6 @@
 package wikiradio.neslihan.tur.org.wikiradio;
 
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,21 +22,40 @@ import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
 import wikiradio.neslihan.tur.org.wikiradio.data.statistic.Measurement;
+import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
+import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 
-public class RadioActivity extends AppCompatActivity{
+public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
+        MediaPlayerController.delegate = this;
+
+        try {
+            MediaPlayerController.play("https://upload.wikimedia.org/wikipedia/commons/b/ba/Aboun.ogg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //double startTime = System.currentTimeMillis();
-        Measurement measurement = new Measurement();
-        measurement.prepareReport(true);
+        //Measurement measurement = new Measurement();
+        //measurement.prepareReport(true);
         //double stopTime = System.currentTimeMillis();
         //double elapsedTime = stopTime - startTime;
         //Log.d(LOG_TAG,"elapsed time first call: "+elapsedTime );
+
+    }
+
+    @Override
+    public void onMediaPlayerPaused() {
+
+    }
+
+    @Override
+    public void onMediaPlayerPlaying() {
 
     }
 }
