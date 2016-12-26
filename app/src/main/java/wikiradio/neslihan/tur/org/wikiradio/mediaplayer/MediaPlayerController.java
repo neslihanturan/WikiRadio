@@ -14,7 +14,27 @@ public class MediaPlayerController {
     public static MediaPlayerCallback delegate = null;
     private static String pendingAction = "NONE";
 
-    public static void play(String songurl) throws IOException {
+    public static void playOrPause(String songurl) throws IOException{
+        //isPlaying() is legal at any state except STATE_ERROR
+        if(SingleMediaPlayer.getInstance().getState() != MediaPlayerState.STATE_ERROR){
+            if(SingleMediaPlayer.getInstance().isPlaying()){
+                pause();
+            }else{
+                play(songurl);
+            }
+        }
+    }
+    public static void playOrPause(FileDescriptor fileDescriptor) throws IOException{
+        //isPlaying() is legal at any state except STATE_ERROR
+        if(SingleMediaPlayer.getInstance().getState() != MediaPlayerState.STATE_ERROR){
+            if(SingleMediaPlayer.getInstance().isPlaying()){
+                pause();
+            }else{
+                play(fileDescriptor);
+            }
+        }
+    }
+    private static void play(String songurl) throws IOException {
         Log.d(LOG_TAG," play(String songurl)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
@@ -26,7 +46,7 @@ public class MediaPlayerController {
             restartMediaPlayer(songurl);
         }
     }
-    public static void play(FileDescriptor fileDescriptor) throws IOException {
+    private static void play(FileDescriptor fileDescriptor) throws IOException {
         Log.d(LOG_TAG," play(FileDescriptor fileDescriptor)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
