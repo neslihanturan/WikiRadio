@@ -12,6 +12,10 @@ public class Constant {
     public static final String AUDIO_STREAM = "AudioStream";
     public static int NOTIFICATION_ID=0;
 
+    public interface SEEKBAR {
+        public static int STOP_SEEKBAR = -1;
+    }
+
     public interface ACTION {
         public static String MAIN_ACTION = "action.activity";
         public static String PLAY_ACTION = "action.play";
