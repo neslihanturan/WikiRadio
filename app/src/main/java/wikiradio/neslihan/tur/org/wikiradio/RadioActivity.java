@@ -19,6 +19,7 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.StreamProxy;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback{
@@ -31,6 +32,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Handler handler;
     private Runnable runnable;
     private int prevPosition;
+    StreamProxy streamProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         startService(new Intent(RadioActivity.this, NotificationService.class));
         initViews();
         setListeners();
+
+        streamProxy = new StreamProxy(this);
+        streamProxy.start(this);
 
 
         //final SeekBar mSeelBar = new SeekBar(this);
@@ -190,7 +195,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         duration = SingleMediaPlayer.getInstance().getDuration();
         seekBar.setMax(duration);
         Log.d(LOG_TAG,"onMediaPlayerPlaying");
-        amoungToupdate = duration / 100;
+        amoungToupdate = duration / 1000;
         Log.d(LOG_TAG,"duration: "+duration+"\n" +
                 "amoungToupdate: "+amoungToupdate);
         handler.postDelayed(runnable, amoungToupdate);
