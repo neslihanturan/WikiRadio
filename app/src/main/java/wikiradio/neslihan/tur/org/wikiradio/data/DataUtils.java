@@ -30,13 +30,13 @@ public class DataUtils {
 
     private static String LOG_TAG = DataUtils.class.getName();
 
-    public static void getRandomCategory(final HashSet<String> previous, String psoffset, final CategoryListCallback callback){
+    public static void getCategoryList(final HashSet<String> previous, String psoffset, final CategoryListCallback callback){
         MwAPIInterface mwAPIInterface = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                                         Constant.MEDIA_WIKI_API));
         Call<MwJsonObject> queryResponse = mwAPIInterface
                                                     .getRelevantCategories(psoffset);
 
-        Log.d(LOG_TAG,"getRandomCategory APIİnterface"+mwAPIInterface.toString());
+        Log.d(LOG_TAG,"getCategoryList APIİnterface"+mwAPIInterface.toString());
 
         queryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
@@ -47,22 +47,22 @@ public class DataUtils {
                         for(MwJsonPrefixsearch ps : response.body().getQuery().getPrefixsearch()){
                             previous.add(ps.getTitle());
                         }
-                        getRandomCategory(previous,response.body().getContinueField().getPsoffset(),callback);
+                        getCategoryList(previous,response.body().getContinueField().getPsoffset(),callback);
                         return;
                     }
                 }
-                Log.d(LOG_TAG,"getRandomCategory method onResponse");
+                Log.d(LOG_TAG,"getCategoryList method onResponse");
                 //ArrayList<String> categoryList = new ArrayList<>();
                 for(MwJsonPrefixsearch ps : response.body().getQuery().getPrefixsearch()){
                     previous.add(ps.getTitle());
                 }
-                Log.d(LOG_TAG,"getRandomCategory is finishing, RandomCategoryCallback is "+callback);
+                Log.d(LOG_TAG,"getCategoryList is finishing, RandomCategoryCallback is "+callback);
                 callback.onSuccess(previous);
-                Log.d(LOG_TAG,"getRandomCategory method is finished, CategoryListCallback.onSuccess method has been thrown");
+                Log.d(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onSuccess method has been thrown");
             }
             @Override
             public void onFailure(Call<MwJsonObject> call, Throwable t) {
-                Log.d(LOG_TAG,"getRandomCategory method is finished, CategoryListCallback.onFailure method has been thrown");
+                Log.d(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onFailure method has been thrown");
                 callback.onError(CategoryListCallback.class);
             }
         });
@@ -74,15 +74,15 @@ public class DataUtils {
         List<String> categoryList = new ArrayList<>();
         Random randomGenerator = new Random();
         int index = randomGenerator.nextInt(categorySet.size());
-
-        categoryList.addAll(categoryList);  //to be able to get indexth element. It is not possible in set without iterating whole list
+        categoryList.addAll(categorySet);
+        //categoryList.addAll(categoryList);  //to be able to get indexth element. It is not possible in set without iterating whole list
         final String categoryTitle = categoryList.get(index);
         MwAPIInterface mwAPIInterface = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                                             Constant.MEDIA_WIKI_API));
         Call<MwJsonObject> queryResponse = mwAPIInterface
                                             .getRandomAudio(categoryTitle);
 
-        Log.d(LOG_TAG,"getRandomCategory APIİnterface"+mwAPIInterface.toString());
+        Log.d(LOG_TAG,"getCategoryList APIİnterface"+mwAPIInterface.toString());
         queryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
             public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {

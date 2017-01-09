@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AllAudioCompleted;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
@@ -44,7 +44,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
     public void prepareReport(boolean detailledMode){
         this.detailledMode = detailledMode;
         Log.d(LOG_TAG,"Report is preparing, please wait");
-        DataUtils.getRandomCategory(new HashSet<String>(),"",this);
+        DataUtils.getCategoryList(new HashSet<String>(),"",this);
     }
 
     /**

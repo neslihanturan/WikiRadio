@@ -5,6 +5,7 @@ package wikiradio.neslihan.tur.org.wikiradio;
  */
 
 public class Constant {
+    public static final String EMPTY_STRING = "";
     public static final String COMMONS_BASE_URL = "https://commons.wikimedia.org/";
     public static final String EN_WIKIPEDIA_BASE_URL = "https://en.wikipedia.org/";
     public static final String MEDIA_WIKI_API = "MediaWikiAPI";

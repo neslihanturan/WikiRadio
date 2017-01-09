@@ -11,6 +11,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+import com.danikula.videocache.HttpProxyCacheServer;
+
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +21,8 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.StreamProxy;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback{
@@ -32,7 +35,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Handler handler;
     private Runnable runnable;
     private int prevPosition;
-    StreamProxy streamProxy;
+    //StreamProxy streamProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +46,10 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         initViews();
         setListeners();
 
-        streamProxy = new StreamProxy(this);
+        /*streamProxy = new StreamProxy(this);
         streamProxy.start(this);
-
+*/
+        //ProxyCacheServer proxyCacheServer = new ProxyCacheServer();
 
         //final SeekBar mSeelBar = new SeekBar(this);
 
@@ -185,7 +189,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     @Override
     public void onMediaPlayerPlaying() {
-        startSeekBar();
+
+        //CacheController.getCurrentURL();
+
     }
 
     private void stopSeekBar(){
