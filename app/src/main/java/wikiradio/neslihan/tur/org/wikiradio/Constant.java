@@ -12,6 +12,7 @@ public class Constant {
     public static final String REST_API = "RestAPI";
     public static final String AUDIO_STREAM = "AudioStream";
     public static int NOTIFICATION_ID=0;
+    public static int MAX_CACHED_FILE=4;
 
     public interface SEEKBAR {
         public static int STOP_SEEKBAR = -1;

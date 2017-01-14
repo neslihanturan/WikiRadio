@@ -11,8 +11,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.SeekBar;
 
+import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,18 +24,20 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
-public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback{
+public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener{
     private String LOG_TAG = RadioActivity.class.getName();
-    private Button playButton;
-    private Button nextButton;
+    private FloatingActionButton playButton;
+    private FloatingActionButton nextButton;
     private SeekBar seekBar;
     private int duration;
     private int amoungToupdate = -1;
     private Handler handler;
     private Runnable runnable;
+    public static CacheControlCallback cacheControlCallback;
     private int prevPosition;
     //StreamProxy streamProxy;
 
@@ -43,6 +47,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegate = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
+        Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
         initViews();
         setListeners();
 
@@ -62,8 +67,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
 
     public void initViews(){
-        playButton = (Button) findViewById(R.id.playButton);
-        nextButton = (Button)findViewById(R.id.nextButton);
+        playButton = (FloatingActionButton) findViewById(R.id.playButton);
+        nextButton = (FloatingActionButton)findViewById(R.id.nextButton);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
     }
     public void setListeners(){
@@ -71,7 +76,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    MediaPlayerController.playOrPause("https://upload.wikimedia.org/wikipedia/commons/b/ba/Aboun.ogg");
+                    playOrPause();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -81,7 +86,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    MediaPlayerController.playOrPause("https://upload.wikimedia.org/wikipedia/commons/b/ba/Aboun.ogg");
+                    nextSong();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -163,6 +168,40 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         handler.postDelayed(r, 200);
         */
     }
+    private void lock(){
+        playButton.setEnabled(false);
+        nextButton.setEnabled(false);
+
+    }
+    private void unlock(){
+        playButton.setEnabled(true);
+        nextButton.setEnabled(true);
+
+    }
+    private void playOrPause() throws IOException {
+        lock();
+        if(CacheController.getCurrentURL()==null){
+            nextSong();
+        }else{
+            MediaPlayerController.playOrPause(CacheController.getCurrentURL());
+        }
+    }
+    private void playSong(String proxyURL) throws IOException {
+        MediaPlayerController.play(proxyURL);
+        App.getProxy(this).registerCacheListener(this, CacheController.getCurrentAudio().getUrl());
+    }
+    private void nextSong() throws IOException {
+        lock();
+        App.getProxy(this).unregisterCacheListener(this);
+        if(CacheController.getCurrentURL()!=null){
+            cacheControlCallback.onFileConsumed();
+        }
+        cacheControlCallback.onNextFileRequested();
+        String newURL = CacheController.getCurrentURL();
+        MediaPlayerController.changeSong(newURL);
+        playSong(newURL);
+        cacheControlCallback.onProcessCompleted();
+    }
 
     /*private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
         private int smoothnessFactor = 10;
@@ -184,12 +223,14 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     @Override
     public void onMediaPlayerPaused() {
+        unlock();
         stopSeekBar();
     }
 
     @Override
     public void onMediaPlayerPlaying() {
-
+        unlock();
+        startSeekBar();
         //CacheController.getCurrentURL();
 
     }
@@ -207,4 +248,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         handler.postDelayed(runnable, amoungToupdate);
     }
 
+    @Override
+    public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+        seekBar.setSecondaryProgress(seekBar.getMax()*percentsAvailable/100);
+    }
 }

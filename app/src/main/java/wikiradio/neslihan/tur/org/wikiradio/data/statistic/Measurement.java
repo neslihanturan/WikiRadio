@@ -26,7 +26,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
     private String LOG_TAG = Measurement.class.getName();
     private AllAudioCompleted callback;  //will be set on all categories checked
     private int numberOfAllCategories;
-    private List<Double> sizesOfAudios;  //List of size of audios will be used to find 80.percentile
+    private List<Integer> sizesOfAudios;  //List of size of audios will be used to find 80.percentile
     private HashMap<String,Integer> validCategories;  //Maps valid categories to number of audios in them
     private int invalidCategoryCounter = 0;  //counter for empty categories
     private int audioFileCounter = 0;  //counter for audio files
@@ -121,9 +121,9 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
 
     }
 
-    private double getAvg(List<Double> list, int num){
+    private double getAvg(List<Integer> list, int num){
         double total=0;
-        for(Double d : list){
+        for(Integer d : list){
             total+=d;
         }
         return total/num;

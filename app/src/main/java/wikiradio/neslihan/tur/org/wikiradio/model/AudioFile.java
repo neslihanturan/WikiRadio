@@ -1,5 +1,9 @@
 package wikiradio.neslihan.tur.org.wikiradio.model;
 
+import com.danikula.videocache.CacheListener;
+
+import java.util.concurrent.Future;
+
 /**
  * Created by nesli on 15.12.2016.
  */
@@ -7,8 +11,11 @@ package wikiradio.neslihan.tur.org.wikiradio.model;
 public class AudioFile {
     private String url;
     private String title;
-    private double size;
+    private int size;
     private String category;
+    private int percentsAvailable;
+    private CacheListener cacheListener;
+    private Future threadPtr;
 
     public String getTitle() {
         return title;
@@ -26,11 +33,11 @@ public class AudioFile {
         this.url = url;
     }
 
-    public double getSize() {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(double size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
@@ -40,6 +47,30 @@ public class AudioFile {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getPercentsAvailable() {
+        return percentsAvailable;
+    }
+
+    public void setPercentsAvailable(int percentsAvailable) {
+        this.percentsAvailable = percentsAvailable;
+    }
+
+    public CacheListener getCacheListener() {
+        return cacheListener;
+    }
+
+    public void setCacheListener(CacheListener cacheListener) {
+        this.cacheListener = cacheListener;
+    }
+
+    public Future getThreadPtr() {
+        return threadPtr;
+    }
+
+    public void setThreadPtr(Future threadPtr) {
+        this.threadPtr = threadPtr;
     }
 
     @Override

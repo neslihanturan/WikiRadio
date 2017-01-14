@@ -14,6 +14,7 @@ public class SingleMediaPlayer extends MediaPlayer {
     private static String LOG_TAG = SingleMediaPlayer.class.getName();
     private int state;
     private static SingleMediaPlayer INSTANCE;
+    private String dataSourceURL;
 
     private SingleMediaPlayer(){
         Log.d(LOG_TAG," SingleMediaPlayer()");
@@ -30,6 +31,7 @@ public class SingleMediaPlayer extends MediaPlayer {
     public static void setDataMediaPlayer(String songUrl) throws IOException {
         Log.d(LOG_TAG," setDataMediaPlayer(String songUrl)");
         INSTANCE.setDataSource(songUrl);
+        INSTANCE.dataSourceURL = songUrl;
         INSTANCE.state = MediaPlayerState.STATE_INITIALIZED;
     }
     public static void setDataMediaPlayer(FileDescriptor fileDescriptor) throws IOException {
@@ -121,6 +123,9 @@ public class SingleMediaPlayer extends MediaPlayer {
         Log.d(LOG_TAG," releaseMediaPlayer()");
         INSTANCE.release();
         INSTANCE.state = MediaPlayerState.STATE_RELEASED;
+    }
+    public String getDataSourceURL(){
+        return dataSourceURL;
     }
 
     /**

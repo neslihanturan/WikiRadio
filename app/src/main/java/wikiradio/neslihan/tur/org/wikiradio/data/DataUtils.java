@@ -82,7 +82,8 @@ public class DataUtils {
         Call<MwJsonObject> queryResponse = mwAPIInterface
                                             .getRandomAudio(categoryTitle);
 
-        Log.d(LOG_TAG,"getCategoryList APIİnterface"+mwAPIInterface.toString());
+        Log.d(LOG_TAG,"getRandomAudio APIİnterface"+mwAPIInterface.toString());
+        Log.d(LOG_TAG,"getRandomAudio called from"+Thread.currentThread());
         queryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
             public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
@@ -90,6 +91,7 @@ public class DataUtils {
                 //case: category empty , this may happens when category is redirected
                 if(response.body().getQuery()==null){
                     getRandomAudio(categorySet, callback); //recursive call to re-randomize
+
                     return;
                 }
                 else{
@@ -106,6 +108,7 @@ public class DataUtils {
                     audioFile.setUrl(((MwJsonPage)randomValue).getImageinfo()[0].getUrl());
                     audioFile.setTitle(((MwJsonPage)randomValue).getImageinfo()[0].getCanonicaltitle());
                     audioFile.setCategory(categoryTitle);
+                    audioFile.setSize(((MwJsonPage)randomValue).getImageinfo()[0].getSize());
                     Log.d(LOG_TAG,"getRandomAudio is finishing, RandomAudioCallback is:" + callback);
                     callback.onSuccess(audioFile, AudioInfoCallbak.class);    //true means valid category
                     Log.d(LOG_TAG,"getRandomAudio onSuccess has been thrown, method is finished");
@@ -113,11 +116,12 @@ public class DataUtils {
             }
             @Override
             public void onFailure(Call<MwJsonObject> call, Throwable t) {
+                t.printStackTrace();
+                Log.d(LOG_TAG,"getRandomAudio is onFailure");
                 callback.onError(AudioInfoCallbak.class);
             }
         });
-        Log.d(LOG_TAG,"getRandomAudio is returned");
-
+        Log.d(LOG_TAG,"getRandomAudio is returned1");
     }
 
     //TODO: add continuation

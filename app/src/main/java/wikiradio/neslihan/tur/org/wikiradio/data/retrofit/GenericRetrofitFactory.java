@@ -6,6 +6,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -20,10 +21,14 @@ public class GenericRetrofitFactory {
         OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("User-Agent", "wikiradio - tur.neslihan@gmail.com").build();
+                Request request = chain.request()
+                        .newBuilder()
+                        .addHeader("User-Agent", "wikiradio - tur.neslihan@gmail.com")
+                        .build();
                 return chain.proceed(request);
             }
-        }).build();
+        }).addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+                .build();
 
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)

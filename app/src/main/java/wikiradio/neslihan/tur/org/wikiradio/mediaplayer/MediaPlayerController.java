@@ -34,7 +34,7 @@ public class MediaPlayerController {
             }
         }
     }
-    private static void play(String songurl) throws IOException {
+    public static void play(String songurl) throws IOException {
         Log.d(LOG_TAG," play(String songurl)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
@@ -109,6 +109,13 @@ public class MediaPlayerController {
             SingleMediaPlayer.getInstance().prepareMediaPlayer(fileDescriptor);
         }
     }
+    public static String getNowPlayingURL(){
+        if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_INITIALIZED){
+            return SingleMediaPlayer.getInstance().getDataSourceURL();
+        }else{
+            return null;
+        }
+    }
     public static void handlePendingAction(String songUrl) throws IOException {
         Log.d(LOG_TAG," handlePendingAction(String songUrl)");
         switch (pendingAction){
@@ -131,4 +138,5 @@ public class MediaPlayerController {
                 break;
         }
     }
+
 }
