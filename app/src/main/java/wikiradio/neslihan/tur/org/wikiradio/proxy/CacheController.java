@@ -96,35 +96,7 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
             Log.d(LOG_TAG,"add random audio");
             DataUtils.getRandomAudio(categorySet,this);
             need --;
-            //startSignal = new CountDownLatch(1);
-            //startSignal.await();
-            //lastPtr++;
         }
-    }
-
-    private void checkCachedState(String url) {
-
-        boolean fullyCached = proxy.isCached(url);
-        //setCachedState(fullyCached);
-        /*if (fullyCached) {
-            progressBar.setSecondaryProgress(100);
-        }*/
-    }
-
-
-
-    private void startCachingVideo(String url) {
-        proxy.registerCacheListener(this, url);
-        String proxyUrl = proxy.getProxyUrl(url);
-        Log.d(LOG_TAG, "Use proxy url " + proxyUrl + " instead of original url " + url);
-        try {
-            MediaPlayerController.changeSong(proxyUrl);
-            MediaPlayerController.playOrPause(proxyUrl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //videoView.setVideoPath(proxyUrl);
-        //videoView.start();
     }
 
     @Nullable
@@ -141,14 +113,6 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
         Log.d(LOG_TAG,"onSuccess created thread is "+audioFile.getThreadPtr());
         cachedURLs.add(audioFile.getUrl()); //get next audio file url
         cachedURLMap.put(audioFile.getUrl(),audioFile);
-        //startSignal.countDown();
-        //checkCachedState(audioFile.getUrl());
-        //startCachingVideo(audioFile.getUrl());
-        //thread string is url
-
-
-        //(new Thread(new KickStarterRunnable(audioFile.getUrl()),audioFile.getUrl())).start();
-        //kickStartVideoCaching(audioFile.getUrl());
         Log.d(LOG_TAG,"audio file :"+audioFile.getTitle());
 
     }
@@ -183,30 +147,26 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
         }else {
             fdelete = new File(context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr)+".download");
         }
-
-
-
-        //if (fdelete.exists()) {
-            if (fdelete.delete()) {
-                Log.d(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
-            } else {
-                Log.d(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
-            }
-        //}
-        //never forget to delete file from cache too
-        /*boolean bool = deleteFile(fileNameGenerator.generate(currPtr));
-        if(bool){
-            Log.d(LOG_TAG,"deleted succesfully");
-        }*/
-        //and delete from our cache mirror map
+        if (fdelete.delete()) {
+            Log.d(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
+        } else {
+            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
+        }
         cachedURLMap.remove(currPtr);
-
     }
 
     @Override
     public void onNextFileRequested() {
             Log.d(LOG_TAG,"next file requested, number of cached files:"+cachedURLMap.size());
             currPtr = getMax();
+            stopOtherThreads();
+    }
+
+    private void stopOtherThreads(){
+        //TODO: sleep other threads to give priority to currently playing audio
+    }
+    private void wakeUpOtherThreads(){
+        //TODO: wakeUp other threads after currently playing audio is fully cached
     }
 
     @Override
@@ -216,6 +176,11 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onCurrentFileCached() {
+        wakeUpOtherThreads();
     }
 
     private final class KickStarterRunnable implements Runnable {
@@ -262,19 +227,14 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
 
     }
 
+    //TODO: remove this listener, only use for secondaryProgress of seekbar, on RadioActivity
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
 
-        //Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s, url: %s", percentsAvailable, cacheFile, url));
-        //Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s, title: %s", percentsAvailable, cacheFile, cachedURLMap.get(url).getTitle()));
-        /*AudioFile audioFile = cachedURLMap.get(url);
-        audioFile.setPercentsAvailable(percentsAvailable);
-        cachedURLMap.put(url,audioFile);
-        */
+        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s, title: %s", percentsAvailable, cacheFile, cachedURLMap.get(url).getTitle()));
         if(cachedURLMap.containsKey(url)){
             cachedURLMap.get(url).setPercentsAvailable(percentsAvailable);
         }
-        //Log.d(LOG_TAG,"onCacheAvailable: max key is"+getMax()+" thread is:"+Thread.currentThread());
     }
 
     private static String getMax(){

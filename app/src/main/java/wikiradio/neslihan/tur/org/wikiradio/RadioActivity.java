@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -22,6 +23,7 @@ import java.util.TimerTask;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
+import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
@@ -33,6 +35,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
     private SeekBar seekBar;
+    private TextView textView;
     private int duration;
     private int amoungToupdate = -1;
     private Handler handler;
@@ -70,6 +73,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         playButton = (FloatingActionButton) findViewById(R.id.playButton);
         nextButton = (FloatingActionButton)findViewById(R.id.nextButton);
         seekBar = (SeekBar) findViewById(R.id.seekBar);
+        textView = (TextView) findViewById(R.id.textView);
     }
     public void setListeners(){
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +102,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void run() {
 
-                Log.d(LOG_TAG,"timer running");
+                //Log.d(LOG_TAG,"timer running");
                 int targetPosition =  SingleMediaPlayer.getInstance().getCurrentPosition();
                 //if (!(amoungToupdate * seekBar.getProgress() >= duration)) {
 
@@ -188,7 +192,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
     private void playSong(String proxyURL) throws IOException {
         MediaPlayerController.play(proxyURL);
-        App.getProxy(this).registerCacheListener(this, CacheController.getCurrentAudio().getUrl());
+        AudioFile audioFile = CacheController.getCurrentAudio();
+        textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
+        App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
     }
     private void nextSong() throws IOException {
         lock();
@@ -250,6 +256,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+        if(percentsAvailable==100){
+            cacheControlCallback.onCurrentFileCached();
+        }
         seekBar.setSecondaryProgress(seekBar.getMax()*percentsAvailable/100);
     }
 }

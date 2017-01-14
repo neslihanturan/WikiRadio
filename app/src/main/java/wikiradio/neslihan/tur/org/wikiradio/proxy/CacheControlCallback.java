@@ -8,4 +8,5 @@ public interface CacheControlCallback {
     void onFileConsumed();
     void onNextFileRequested();
     void onProcessCompleted();
+    void onCurrentFileCached();
 }
