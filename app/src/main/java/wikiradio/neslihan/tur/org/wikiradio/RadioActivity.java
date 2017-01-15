@@ -22,13 +22,14 @@ import java.util.TimerTask;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
+import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlService;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
-public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener{
+public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener,CacheControlService.CacheControlFeedback{
     private String LOG_TAG = RadioActivity.class.getName();
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
@@ -38,6 +39,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Handler handler;
     private Runnable runnable;
     public static CacheControlCallback cacheControlCallback;
+    private AudioFile audioFile = null;
     private int prevPosition;
     //StreamProxy streamProxy;
 
@@ -45,6 +47,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
+        CacheControlService.cacheControlFeedbackActivity = this;
         MediaPlayerController.delegate = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
@@ -180,27 +183,27 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
     private void playOrPause() throws IOException {
         lock();
-        if(CacheController.getCurrentURL()==null){
+        if(audioFile==null){
             nextSong();
         }else{
-            MediaPlayerController.playOrPause(CacheController.getCurrentURL());
+            MediaPlayerController.playOrPause(audioFile.getUrl());
         }
+
     }
     private void playSong(String proxyURL) throws IOException {
         MediaPlayerController.play(proxyURL);
-        App.getProxy(this).registerCacheListener(this, CacheController.getCurrentAudio().getUrl());
+        App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
     }
     private void nextSong() throws IOException {
         lock();
         App.getProxy(this).unregisterCacheListener(this);
-        if(CacheController.getCurrentURL()!=null){
-            cacheControlCallback.onFileConsumed();
+        if(audioFile!=null){
+            cacheControlCallback.onFileConsumed(audioFile);
         }
-        cacheControlCallback.onNextFileRequested();
-        String newURL = CacheController.getCurrentURL();
+        audioFile = cacheControlCallback.onNextFileRequested();
+        String newURL = audioFile.getUrl();
         MediaPlayerController.changeSong(newURL);
         playSong(newURL);
-        cacheControlCallback.onProcessCompleted();
     }
 
     /*private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
@@ -252,4 +255,19 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
         seekBar.setSecondaryProgress(seekBar.getMax()*percentsAvailable/100);
     }
+
+    @Override
+    public void onNewSongSet(AudioFile audioFile) {
+        this.audioFile = audioFile;
+    }
+
+    @Override
+    public void onPlayingStateChanged() {
+        try {
+            playOrPause();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

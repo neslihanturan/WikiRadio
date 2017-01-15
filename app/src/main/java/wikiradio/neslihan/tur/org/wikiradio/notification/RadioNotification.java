@@ -49,6 +49,11 @@ public class RadioNotification{
         PendingIntent playPendingIntent =  PendingIntent.getService(context, notificationID, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
+        Intent pauseIntent = new Intent();
+        playIntent.setAction(Constant.ACTION.PAUSE_ACTION);
+        PendingIntent pausePendingIntent =  PendingIntent.getService(context, notificationID, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.playButton, pausePendingIntent);
+
         //Next intent
         Intent nextIntent = new Intent();
         nextIntent.setAction(Constant.ACTION.NEXT_ACTION);
