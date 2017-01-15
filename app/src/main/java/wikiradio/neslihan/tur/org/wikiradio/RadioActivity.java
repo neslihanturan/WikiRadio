@@ -54,19 +54,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         initViews();
         setListeners();
 
-        /*streamProxy = new StreamProxy(this);
-        streamProxy.start(this);
-*/
-        //ProxyCacheServer proxyCacheServer = new ProxyCacheServer();
-
-        //final SeekBar mSeelBar = new SeekBar(this);
-
-        /*try {
-            MediaPlayerController.play("https://upload.wikimedia.org/wikipedia/commons/b/ba/Aboun.ogg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
     public void initViews(){
@@ -104,19 +91,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
                 //Log.d(LOG_TAG,"timer running");
                 int targetPosition =  SingleMediaPlayer.getInstance().getCurrentPosition();
-                //if (!(amoungToupdate * seekBar.getProgress() >= duration)) {
-
-                        //int p = seekBar.getProgress();
-                        //p += 1;
-                /*while(prevPosition != targetPosition){
-                    prevPosition++;
-                    seekBar.setProgress(prevPosition);
-                    Log.d(LOG_TAG, "Inner Handler, target pos:"+targetPosition+" prevpos:"+prevPosition);
-                }*/
 
                 seekBar.setProgress(targetPosition);
-
-                //}
 
                 prevPosition = targetPosition;
                 if(amoungToupdate != Constant.SEEKBAR.STOP_SEEKBAR){
@@ -130,47 +106,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             }
         };
 
-
-
-
-/*
-        Timer mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Log.d(LOG_TAG,"timer running");
-                        if (!(amoungToupdate * seekBar.getProgress() >= duration)) {
-                            int p = seekBar.getProgress();
-                            p += 1;
-                            seekBar.setProgress(p);
-                        }
-                    }
-                });
-            }
-        },amoungToupdate);*/
-        //seekBar.setOnSeekBarChangeListener(new SeekBarListener());
-        /*
-        ObjectAnimator animation = ObjectAnimator.ofInt(seekBar, "progress", SingleMediaPlayer.getInstance().getDuration());
-        animation.setDuration(500); // 0.5 second
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.start();
-        */
-        /*
-        handler = new Handler();
-        final Runnable r = new Runnable() {
-            public void run() {
-                seekBar.setMax(SingleMediaPlayer.getInstance().getDuration());
-                seekBar.setProgress(SingleMediaPlayer.getInstance().getCurrentPosition());
-                handler.postDelayed(this, 200);
-
-            }
-        };
-        handler.postDelayed(r, 200);
-        */
     }
     private void lock(){
         playButton.setEnabled(false);
@@ -195,9 +130,11 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         AudioFile audioFile = CacheController.getCurrentAudio();
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
         App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
+        Log.d(LOG_TAG,"now playing, number of threads: "+Thread.activeCount());
     }
     private void nextSong() throws IOException {
         lock();
+        //dont forget to unreqister otherwise we can cause memory leaks
         App.getProxy(this).unregisterCacheListener(this);
         if(CacheController.getCurrentURL()!=null){
             cacheControlCallback.onFileConsumed();
@@ -208,24 +145,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         playSong(newURL);
         cacheControlCallback.onProcessCompleted();
     }
-
-    /*private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
-        private int smoothnessFactor = 10;
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            progress = Math.round(progress / smoothnessFactor);
-        }
-
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            seekBar.setProgress(Math.round((seekBar.getProgress() + (smoothnessFactor / 2)) / smoothnessFactor) * smoothnessFactor);
-        }
-    }*/
-
-
-
-
 
     @Override
     public void onMediaPlayerPaused() {

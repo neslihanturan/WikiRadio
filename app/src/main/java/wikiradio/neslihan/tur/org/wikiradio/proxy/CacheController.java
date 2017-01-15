@@ -51,7 +51,7 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
     private static HashSet<String> categorySet;
     private static CountDownLatch startSignal;
     private static Context context;
-    private ExecutorService executor = Executors.newFixedThreadPool(5);
+    private ExecutorService executor = Executors.newFixedThreadPool(4);
     private FileNameGenerator fileNameGenerator = new Md5FileNameGenerator();
     private static HttpProxyCacheServer proxy;
 
@@ -159,20 +159,41 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
     public void onNextFileRequested() {
             Log.d(LOG_TAG,"next file requested, number of cached files:"+cachedURLMap.size());
             currPtr = getMax();
-            stopOtherThreads();
     }
 
     private void stopOtherThreads(){
         //TODO: sleep other threads to give priority to currently playing audio
+
+        for (Map.Entry<String, AudioFile> entry : cachedURLMap.entrySet())
+        {
+            if(entry.getKey().equals(currPtr)){
+                continue;
+            }
+            //cancel all threads other than currently playing thread
+            entry.getValue().getThreadPtr().cancel(true);
+            Log.d(LOG_TAG,"Thread for:"+entry.getValue().getTitle()+"is stopped");
+            //executor.shutdown();
+        }
     }
     private void wakeUpOtherThreads(){
         //TODO: wakeUp other threads after currently playing audio is fully cached
+        for (Map.Entry<String, AudioFile> entry : cachedURLMap.entrySet())
+        {
+            if(entry.getKey().equals(currPtr)){
+                continue;
+            }
+            //reactivate all cancelled threads
+            entry.getValue().setThreadPtr(executor.submit(new Thread(new KickStarterRunnable(entry.getValue().getUrl(), entry.getValue().getTitle()))));
+            Log.d(LOG_TAG,"Thread for:"+entry.getValue().getTitle()+"is started");
+        }
     }
 
     @Override
     public void onProcessCompleted() {
         try {
             updateCachedURLs();
+            stopOtherThreads();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -231,7 +252,8 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
 
-        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s, title: %s", percentsAvailable, cacheFile, cachedURLMap.get(url).getTitle()));
+        //Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s, title: %s", percentsAvailable, cacheFile, cachedURLMap.get(url).getTitle()));
+        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, title: %s", percentsAvailable, cachedURLMap.get(url).getTitle()));
         if(cachedURLMap.containsKey(url)){
             cachedURLMap.get(url).setPercentsAvailable(percentsAvailable);
         }
@@ -251,6 +273,9 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
             {
                 maxEntry = entry;
             }
+            Log.d(LOG_TAG,"** cachedURLMap entry audio title is:"+entry.getValue().getTitle()+"\n" +
+                    " its percent is:"+entry.getValue().getPercentsAvailable()+"\n" +
+                    "its bytes available is:"+entry.getValue().getPercentsAvailable()*entry.getValue().getSize()/100);
         }
         Log.d(LOG_TAG,"selected audio is:"+maxEntry.getValue().getTitle()+" its percents is:"+maxEntry.getValue().getPercentsAvailable());
         return maxEntry.getKey();
