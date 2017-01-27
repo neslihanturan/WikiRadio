@@ -1,7 +1,5 @@
 package wikiradio.neslihan.tur.org.wikiradio.model;
 
-import android.os.AsyncTask;
-
 import com.danikula.videocache.CacheListener;
 
 import java.util.concurrent.Future;
@@ -18,8 +16,6 @@ public class AudioFile {
     private int percentsAvailable;
     private CacheListener cacheListener;
     private Future threadPtr;
-    private Thread workerThread;
-    private AsyncTask asyncTask;
 
     public String getTitle() {
         return title;
@@ -73,24 +69,8 @@ public class AudioFile {
         return threadPtr;
     }
 
-    public Thread getWorkerThread() {
-        return workerThread;
-    }
-
-    public void setWorkerThread(Thread workerThread) {
-        this.workerThread = workerThread;
-    }
-
     public void setThreadPtr(Future threadPtr) {
         this.threadPtr = threadPtr;
-    }
-
-    public AsyncTask getAsyncTask() {
-        return asyncTask;
-    }
-
-    public void setAsyncTask(AsyncTask asyncTask) {
-        this.asyncTask = asyncTask;
     }
 
     @Override
