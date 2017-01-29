@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
 
 
@@ -26,7 +26,7 @@
         </activity>
         <service android:enabled="true" android:name=".notification.NotificationService" />
         <service
-            android:name=".proxy.CacheControlService" android:exported="false"/>
+            android:name=".proxy.CacheController" android:exported="false"/>
 
     </application>
 

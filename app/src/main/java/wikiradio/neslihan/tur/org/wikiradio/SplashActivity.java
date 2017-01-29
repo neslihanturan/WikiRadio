@@ -35,7 +35,7 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
 
 public class SplashActivity extends Activity implements CategoryListCallback{
     private static String LOG_TAG = SplashActivity.class.getName();
-    private HashSet<String> categorySet;
+    //private HashSet<String> categorySet;
     private Toast toast;
     private SharedPreferences sharedPref;
 
@@ -46,13 +46,13 @@ public class SplashActivity extends Activity implements CategoryListCallback{
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         if(!sharedPref.contains("firstRun")){
             replaceToast("it is first run");
-            categorySet = new HashSet<>();
-            DataUtils.getCategoryList(categorySet,Constant.EMPTY_STRING,this);
+            //categorySet = new HashSet<>();
+            DataUtils.getCategoryList(Constant.categorySet,Constant.EMPTY_STRING,this);
 
         }else{
             replaceToast("not first run");
             Constant.categorySet = readFromFile(this);
-            this.categorySet = Constant.categorySet;
+            //this.categorySet = Constant.categorySet;
             startOrganizerService();
             startApplication();
         }
@@ -64,14 +64,14 @@ public class SplashActivity extends Activity implements CategoryListCallback{
 
     public void startApplication(){
         Intent intent = new Intent(SplashActivity.this, RadioActivity.class);
-        intent.putExtra("category_set", categorySet);
+        //intent.putExtra("category_set", categorySet);
         startActivity(intent);
         finish();
     }
     public void startOrganizerService(){
         Log.d(LOG_TAG,"service is started");
         Intent intent = new Intent(SplashActivity.this, CacheController.class);
-        intent.putExtra("category_set", categorySet);
+        //intent.putExtra("category_set", categorySet);
         this.startService(intent);
         //finish();
     }
@@ -117,7 +117,7 @@ public class SplashActivity extends Activity implements CategoryListCallback{
 
     @Override
     public void onSuccess(HashSet<String> categorySet) {
-        this.categorySet = categorySet;
+        //this.categorySet = categorySet;
         Constant.categorySet = categorySet;
         saveToFile(categorySet, "categoryset.txt");
         startOrganizerService();

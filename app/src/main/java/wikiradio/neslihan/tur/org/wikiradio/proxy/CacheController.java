@@ -76,7 +76,7 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
             //threadGroup = new ThreadGroup("CahceController");
             Log.d(LOG_TAG,"cache controller is started");
             RadioActivity.cacheControlCallback = this;
-            categorySet = getCategorySet(intent);
+            categorySet = Constant.categorySet;
             updateCachedURLs();
             proxy = App.getProxy(this);
         } catch (InterruptedException e) {
@@ -84,9 +84,10 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
         }
     }
 
+    /*
     private HashSet<String> getCategorySet(Intent intent){
         return (HashSet<String>) intent.getSerializableExtra("category_set");
-    }
+    }*/
 
     private void updateCachedURLs() throws InterruptedException {
         Log.d(LOG_TAG,"updateCachedURLs, number of cached files:"+cachedURLMap.size());
