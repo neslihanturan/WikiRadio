@@ -26,7 +26,7 @@
         </activity>
         <service android:enabled="true" android:name=".notification.NotificationService" />
         <service
-            android:name=".proxy.CacheController" android:exported="false"/>
+            android:name=".proxy.CacheController2" android:exported="false"/>
 
     </application>
 

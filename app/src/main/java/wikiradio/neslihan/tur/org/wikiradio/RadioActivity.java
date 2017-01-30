@@ -27,7 +27,8 @@ import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CachingFile;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener{
@@ -184,26 +185,26 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
     private void playOrPause() throws IOException {
         lock();
-        if(CacheController.getCurrentURL()==null){
+        if(CacheController2.getCurrentURL()==null){
             nextSong();
         }else{
-            MediaPlayerController.playOrPause(CacheController.getCurrentURL());
+            MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
         }
     }
     private void playSong(String proxyURL) throws IOException {
         MediaPlayerController.play(proxyURL);
-        AudioFile audioFile = CacheController.getCurrentAudio();
+        AudioFile audioFile = CacheController2.getCurrentAudio();
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
         App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
     }
     private void nextSong() throws IOException {
         lock();
         App.getProxy(this).unregisterCacheListener(this);
-        if(CacheController.getCurrentURL()!=null){
+        if(CacheController2.getCurrentURL()!=null){
             cacheControlCallback.onFileConsumed();
         }
         cacheControlCallback.onNextFileRequested();
-        String newURL = CacheController.getCurrentURL();
+        String newURL = CacheController2.getCurrentURL();
         MediaPlayerController.changeSong(newURL);
         playSong(newURL);
         cacheControlCallback.onProcessCompleted();

@@ -16,6 +16,24 @@ public class AudioFile {
     private int percentsAvailable;
     private CacheListener cacheListener;
     private Future threadPtr;
+    private boolean isFullyCached;
+    private Thread thread;
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
+    }
+
+    public boolean isFullyCached() {
+        return isFullyCached;
+    }
+
+    public void setFullyCached(boolean fullyCached) {
+        isFullyCached = fullyCached;
+    }
 
     public String getTitle() {
         return title;

@@ -75,7 +75,7 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
             context = this;
             //threadGroup = new ThreadGroup("CahceController");
             Log.d(LOG_TAG,"cache controller is started");
-            RadioActivity.cacheControlCallback = this;
+            //RadioActivity.cacheControlCallback = this;
             categorySet = Constant.categorySet;
             updateCachedURLs();
             proxy = App.getProxy(this);
