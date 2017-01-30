@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
+import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
@@ -31,7 +33,7 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CachingFile;
 import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
-public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener{
+public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener, AudioInfoCallbak {
     private String LOG_TAG = RadioActivity.class.getName();
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
@@ -192,8 +194,14 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         }
     }
     private void playSong(String proxyURL) throws IOException {
+        
         MediaPlayerController.play(proxyURL);
         AudioFile audioFile = CacheController2.getCurrentAudio();
+        textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
+        App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
+    }
+    private void playSong(AudioFile audioFile) throws IOException {
+        MediaPlayerController.play(App.getProxy(this).getProxyUrl(audioFile.getUrl()));
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
         App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
     }
@@ -205,9 +213,13 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         }
         cacheControlCallback.onNextFileRequested();
         String newURL = CacheController2.getCurrentURL();
-        MediaPlayerController.changeSong(newURL);
-        playSong(newURL);
-        cacheControlCallback.onProcessCompleted();
+        if(newURL==null){
+            DataUtils.getRandomAudio(Constant.categorySet,this);
+        }else{
+            MediaPlayerController.changeSong(newURL);
+            playSong(newURL);
+            cacheControlCallback.onProcessCompleted();
+        }
     }
 
     /*private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
@@ -261,5 +273,21 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             cacheControlCallback.onCurrentFileCached();
         }
         seekBar.setSecondaryProgress(seekBar.getMax()*percentsAvailable/100);
+    }
+
+    @Override
+    public void onSuccess(AudioFile audioFile, Class sender) {
+        try {
+            MediaPlayerController.changeSong(audioFile.getUrl());
+            playSong(audioFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cacheControlCallback.onProcessCompleted();
+    }
+
+    @Override
+    public void onError(Class sender) {
+
     }
 }
