@@ -7,6 +7,5 @@ package wikiradio.neslihan.tur.org.wikiradio.proxy;
 public interface CacheControlCallback {
     void onFileConsumed();
     void onNextFileRequested();
-    void onProcessCompleted();
     void onCurrentFileCached();
 }

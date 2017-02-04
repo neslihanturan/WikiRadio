@@ -37,6 +37,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     private static HashMap<String , AudioFile> cachingFileHashMap;
     private static String currPtr;
     private static Context context;
+    public static int expectedSize;
     private FileNameGenerator fileNameGenerator = new Md5FileNameGenerator();
 
     /**
@@ -66,7 +67,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     private void cacheFilesOnBackground(){
         ;
-        if (cachingFileHashMap.size()<3){
+        if (expectedSize<4){
             Log.d(LOG_TAG,"caching files on background");
             DataUtils.getRandomAudio(categorySet,this);
         }
@@ -91,7 +92,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
-        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
+        //Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
         //if(percentsAvailable == 100){
             //cachingFileHashMap.get(url).setFullyCached(true);
         //}
@@ -112,6 +113,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onFileConsumed() {
+        expectedSize--;
         Log.d(LOG_TAG,"onfileconsumed title:"+cachingFileHashMap.get(currPtr).getTitle());
 
         File fdelete;
@@ -152,80 +154,22 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     }
 
     @Override
-    public void onProcessCompleted() {
-
-    }
-
-    @Override
     public void onCurrentFileCached() {
         Log.d(LOG_TAG,"on current file cached");
         //continueBackgroundCaching();
     }
 
-    private void stopBackgroundCaching(){
-        Log.d(LOG_TAG,"on stop background caching");
-        for(AudioFile audioFile : cachingFileHashMap.values()){
-            while (!audioFile.getThread().isInterrupted()){
-                audioFile.getThread().interrupt();
-            }
-        }
-    }
-
-    private void continueBackgroundCaching(){
-        Log.d(LOG_TAG,"on continue background caching");
-        for( AudioFile audioFile : cachingFileHashMap.values()){
-            audioFile.getThread().run();
-        }
-    }
-
     @Override
     public void onBackgroundCachingIsDone(AudioFile audioFile) {
+        expectedSize++;
+        Log.d(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
         cachingFileHashMap.put(audioFile.getUrl(),audioFile);
         cacheFilesOnBackground();
     }
 
-    public final class KickStarterRunnable implements Runnable {
-        String url;
-        String title;
-
-        public KickStarterRunnable(String url, String title) {
-            this.url = url;
-            this.title = title;
-        }
-
-        @Override
-        public void run() {
-            kickStartVideoCaching(url, title);
-        }
-    }
-
-    private void kickStartVideoCaching(String originUrl,String title){
-        Log.d(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
-        //should I pass them to thread as parameter?
-        proxy.registerCacheListener(this, originUrl);
-        //proxy.unregisterCacheListener(this);
-        URL url = null;
-        try {
-            url = new URL(proxy.getProxyUrl(originUrl));
-            InputStream inputStream = url.openStream();
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            int length = 0;
-            while ((length = inputStream.read(buffer)) != -1) {
-                //Since we just need to kick start the prefetching, dont need to do anything here
-                //  or we can use ByteArrayOutputStream to write down the data to disk
-            }
-
-            inputStream.close();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public class BackgroundTask extends AsyncTask<Object, AudioFile, AudioFile> {
         BackgroundCachingIsDone cachingIsDoneCallback;
+        String LOG_TAG = BackgroundTask.class.getName();
 
         @Override
         protected void onPreExecute() {
@@ -234,6 +178,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
         @Override
         protected AudioFile doInBackground(Object... params) {
+            Log.d(LOG_TAG,"do in background");
             AudioFile audioFile = (AudioFile) params[0];
             String originUrl = audioFile.getUrl();
             String title = audioFile.getTitle();
@@ -241,11 +186,12 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
             this.cachingIsDoneCallback = (BackgroundCachingIsDone) params[2];
             Log.d(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
             //should I pass them to thread as parameter?
-            proxy.registerCacheListener(context, originUrl);
+            //proxy.registerCacheListener(context, originUrl);
             //proxy.unregisterCacheListener(this);
             URL url = null;
+            String proxyUrl = proxy.getProxyUrl(originUrl);
             try {
-                url = new URL(proxy.getProxyUrl(originUrl));
+                url = new URL(proxyUrl);
                 InputStream inputStream = url.openStream();
                 int bufferSize = 1024;
                 byte[] buffer = new byte[bufferSize];
@@ -256,6 +202,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
                 }
                 inputStream.close();
                 audioFile.setFullyCached(true);
+                audioFile.setProxyUrl(proxyUrl);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

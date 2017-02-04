@@ -18,6 +18,15 @@ public class AudioFile {
     private Future threadPtr;
     private boolean isFullyCached;
     private Thread thread;
+    private String proxyUrl;
+
+    public String getProxyUrl() {
+        return proxyUrl;
+    }
+
+    public void setProxyUrl(String proxyUrl) {
+        this.proxyUrl = proxyUrl;
+    }
 
     public Thread getThread() {
         return thread;

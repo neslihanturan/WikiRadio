@@ -56,20 +56,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
         initViews();
         setListeners();
-
-        /*streamProxy = new StreamProxy(this);
-        streamProxy.start(this);
-*/
-        //ProxyCacheServer proxyCacheServer = new ProxyCacheServer();
-
-        //final SeekBar mSeelBar = new SeekBar(this);
-
-        /*try {
-            MediaPlayerController.play("https://upload.wikimedia.org/wikipedia/commons/b/ba/Aboun.ogg");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
     public void initViews(){
@@ -104,23 +90,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         runnable = new Runnable(){
             @Override
             public void run() {
-
-                //Log.d(LOG_TAG,"timer running");
                 int targetPosition =  SingleMediaPlayer.getInstance().getCurrentPosition();
-                //if (!(amoungToupdate * seekBar.getProgress() >= duration)) {
-
-                        //int p = seekBar.getProgress();
-                        //p += 1;
-                /*while(prevPosition != targetPosition){
-                    prevPosition++;
-                    seekBar.setProgress(prevPosition);
-                    Log.d(LOG_TAG, "Inner Handler, target pos:"+targetPosition+" prevpos:"+prevPosition);
-                }*/
-
                 seekBar.setProgress(targetPosition);
-
-                //}
-
                 prevPosition = targetPosition;
                 if(amoungToupdate != Constant.SEEKBAR.STOP_SEEKBAR){
                     handler.postDelayed(this, amoungToupdate);
@@ -133,47 +104,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             }
         };
 
-
-
-
-/*
-        Timer mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Log.d(LOG_TAG,"timer running");
-                        if (!(amoungToupdate * seekBar.getProgress() >= duration)) {
-                            int p = seekBar.getProgress();
-                            p += 1;
-                            seekBar.setProgress(p);
-                        }
-                    }
-                });
-            }
-        },amoungToupdate);*/
-        //seekBar.setOnSeekBarChangeListener(new SeekBarListener());
-        /*
-        ObjectAnimator animation = ObjectAnimator.ofInt(seekBar, "progress", SingleMediaPlayer.getInstance().getDuration());
-        animation.setDuration(500); // 0.5 second
-        animation.setInterpolator(new DecelerateInterpolator());
-        animation.start();
-        */
-        /*
-        handler = new Handler();
-        final Runnable r = new Runnable() {
-            public void run() {
-                seekBar.setMax(SingleMediaPlayer.getInstance().getDuration());
-                seekBar.setProgress(SingleMediaPlayer.getInstance().getCurrentPosition());
-                handler.postDelayed(this, 200);
-
-            }
-        };
-        handler.postDelayed(r, 200);
-        */
     }
     private void lock(){
         playButton.setEnabled(false);
@@ -193,52 +123,43 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
         }
     }
-    private void playSong(String proxyURL) throws IOException {
+    /*private void playSong(String proxyURL) throws IOException {
 
         MediaPlayerController.play(proxyURL);
         AudioFile audioFile = CacheController2.getCurrentAudio();
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
         App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
-    }
+    }*/
     private void playSong(AudioFile audioFile) throws IOException {
-        MediaPlayerController.play(App.getProxy(this).getProxyUrl(audioFile.getUrl()));
+        Log.d(LOG_TAG,"playSong method started");
+        MediaPlayerController.play(audioFile.getProxyUrl());
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
-        App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
+        //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
+
     }
     private void nextSong() throws IOException {
+        Log.d(LOG_TAG,"next song requested");
         lock();
         App.getProxy(this).unregisterCacheListener(this);
-        if(CacheController2.getCurrentURL()!=null){
+        // there is a file that is played previously
+        if(CacheController2.getCurrentAudio()!=null){
+            Log.d(LOG_TAG,"current audio is null");
             cacheControlCallback.onFileConsumed();
         }
+        Log.d(LOG_TAG,"call onNextFileRequested()");
         cacheControlCallback.onNextFileRequested();
-        String newURL = CacheController2.getCurrentURL();
-        if(newURL==null){
+        AudioFile newAudioFile = CacheController2.getCurrentAudio();
+        if(newAudioFile==null){
+            Log.d(LOG_TAG,"newAudioFile is null");
             DataUtils.getRandomAudio(Constant.categorySet,this);
         }else{
-            MediaPlayerController.changeSong(newURL);
-            playSong(newURL);
-            cacheControlCallback.onProcessCompleted();
+            Log.d(LOG_TAG,"newAudioFile is NOT null");
+            newAudioFile.setProxyUrl(App.getProxy(this).getProxyUrl(newAudioFile.getUrl()));
+            MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
+            seekBar.setSecondaryProgress(seekBar.getMax());
+            playSong(newAudioFile);
         }
     }
-
-    /*private class SeekBarListener implements SeekBar.OnSeekBarChangeListener {
-        private int smoothnessFactor = 10;
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            progress = Math.round(progress / smoothnessFactor);
-        }
-
-        public void onStartTrackingTouch(SeekBar seekBar) {
-        }
-
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            seekBar.setProgress(Math.round((seekBar.getProgress() + (smoothnessFactor / 2)) / smoothnessFactor) * smoothnessFactor);
-        }
-    }*/
-
-
-
-
 
     @Override
     public void onMediaPlayerPaused() {
@@ -250,8 +171,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     public void onMediaPlayerPlaying() {
         unlock();
         startSeekBar();
-        //CacheController.getCurrentURL();
-
     }
 
     private void stopSeekBar(){
@@ -269,6 +188,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
+        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
         if(percentsAvailable==100){
             cacheControlCallback.onCurrentFileCached();
         }
@@ -278,12 +198,13 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
         try {
-            MediaPlayerController.changeSong(audioFile.getUrl());
+            App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
+            audioFile.setProxyUrl(App.getProxy(this).getProxyUrl(audioFile.getUrl()));
+            MediaPlayerController.changeSong(audioFile.getProxyUrl());
             playSong(audioFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cacheControlCallback.onProcessCompleted();
     }
 
     @Override

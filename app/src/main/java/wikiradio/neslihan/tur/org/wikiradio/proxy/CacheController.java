@@ -170,14 +170,14 @@ public class CacheController extends IntentService implements AudioInfoCallbak, 
         //TODO: wakeUp other threads after currently playing audio is fully cached
     }
 
-    @Override
+    /*@Override
     public void onProcessCompleted() {
         try {
             updateCachedURLs();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onCurrentFileCached() {
