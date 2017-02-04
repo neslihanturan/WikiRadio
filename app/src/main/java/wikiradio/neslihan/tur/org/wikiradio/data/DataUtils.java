@@ -45,7 +45,9 @@ public class DataUtils {
                 if(response.body().getContinueField()!=null){
                     if(response.body().getContinueField().getPsoffset()!=null){
                         for(MwJsonPrefixsearch ps : response.body().getQuery().getPrefixsearch()){
-                            previous.add(ps.getTitle());
+                            //if(ps.getTitle()!=null){
+                                previous.add(ps.getTitle());
+                            //}
                         }
                         getCategoryList(previous,response.body().getContinueField().getPsoffset(),callback);
                         return;
@@ -54,7 +56,9 @@ public class DataUtils {
                 Log.d(LOG_TAG,"getCategoryList method onResponse");
                 //ArrayList<String> categoryList = new ArrayList<>();
                 for(MwJsonPrefixsearch ps : response.body().getQuery().getPrefixsearch()){
-                    previous.add(ps.getTitle());
+                    //if(ps.getTitle()!=null){
+                        previous.add(ps.getTitle());
+                    //}
                 }
                 Log.d(LOG_TAG,"getCategoryList is finishing, RandomCategoryCallback is "+callback);
                 callback.onSuccess(previous);

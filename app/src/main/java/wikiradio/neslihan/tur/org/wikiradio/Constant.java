@@ -7,7 +7,7 @@ import java.util.HashSet;
  */
 
 public class Constant {
-    public static HashSet<String> categorySet;
+    public static HashSet<String> categorySet = new HashSet<>();
     public static final String EMPTY_STRING = "";
     public static final String COMMONS_BASE_URL = "https://commons.wikimedia.org/";
     public static final String EN_WIKIPEDIA_BASE_URL = "https://en.wikipedia.org/";

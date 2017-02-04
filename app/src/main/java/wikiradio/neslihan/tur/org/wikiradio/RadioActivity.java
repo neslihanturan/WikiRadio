@@ -194,7 +194,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         }
     }
     private void playSong(String proxyURL) throws IOException {
-        
+
         MediaPlayerController.play(proxyURL);
         AudioFile audioFile = CacheController2.getCurrentAudio();
         textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
