@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">WikiRadio</string>
+    <string name="collapsed_image">A single Android robot waving. Symbolises a collapsed
+        notification.
+    </string>
 </resources>
