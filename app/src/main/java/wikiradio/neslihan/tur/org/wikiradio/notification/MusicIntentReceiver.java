@@ -10,8 +10,10 @@ import android.util.Log;
 import java.io.IOException;
 
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
+import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
+import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
@@ -23,17 +25,21 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
  * Created by nesli on 07.02.2017.
  */
 
-public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoCallbak{
+public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoCallbak, MediaPlayerCallback {
     private String LOG_TAG = MusicIntentReceiver.class.getName();
     private Context context;
     public static CacheControlCallback cacheControlCallback;
     MediaPlayer mediaPlayer = null;
     String songUrl;
 
+
     @Override
     public void onReceive(Context ctx, Intent intent) {
         String action = intent.getAction();
         context = ctx;
+
+        //TODO: null p. e. if push activity before service. Because onReceive never triggered.
+        MediaPlayerController.delegateService = this;
 
         if (action.equals(
                 android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
@@ -55,6 +61,8 @@ public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoC
             }
         }
     }
+
+
     private void playOrPause() throws IOException {
         //lock();
         if(CacheController2.getCurrentURL()==null){
@@ -109,5 +117,15 @@ public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoC
     @Override
     public void onError(Class sender) {
 
+    }
+
+    @Override
+    public void onMediaPlayerPaused() {
+        RadioNotification.updateNotification(Constant.ISPLAYING.PAUSED);
+    }
+
+    @Override
+    public void onMediaPlayerPlaying() {
+        RadioNotification.updateNotification(Constant.ISPLAYING.PLAYING);
     }
 }

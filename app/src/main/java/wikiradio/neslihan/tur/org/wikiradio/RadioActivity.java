@@ -1,5 +1,4 @@
 package wikiradio.neslihan.tur.org.wikiradio;
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -7,18 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.danikula.videocache.CacheListener;
-import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
@@ -30,8 +24,6 @@ import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CachingFile;
-import wikiradio.neslihan.tur.org.wikiradio.ui.SeekBarController;
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener, AudioInfoCallbak {
     private String LOG_TAG = RadioActivity.class.getName();
@@ -45,13 +37,14 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Runnable runnable;
     public static CacheControlCallback cacheControlCallback;
     private int prevPosition;
+    private AudioFile nowPlaying;
     //StreamProxy streamProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
-        MediaPlayerController.delegate = this;
+        MediaPlayerController.delegateActivity = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
         initViews();
@@ -133,7 +126,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private void playSong(AudioFile audioFile) throws IOException {
         Log.d(LOG_TAG,"playSong method started");
         MediaPlayerController.play(audioFile.getProxyUrl());
-        textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
+        nowPlaying = audioFile;
+
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
 
     }
@@ -164,13 +158,29 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     @Override
     public void onMediaPlayerPaused() {
         unlock();
+        //updateText();
+        setPausedView();
         stopSeekBar();
     }
 
     @Override
     public void onMediaPlayerPlaying() {
         unlock();
+        updateText();
+        setPlayingView();
         startSeekBar();
+    }
+
+    private void updateText(){
+        textView.setText("Audio Title: "+nowPlaying.getTitle()+"\n Category:"+nowPlaying.getCategory());
+    }
+
+    private void setPausedView(){
+        playButton.setImageResource(android.R.drawable.ic_media_pause);
+    }
+
+    private void setPlayingView(){
+        playButton.setImageResource(android.R.drawable.ic_media_play);
     }
 
     private void stopSeekBar(){

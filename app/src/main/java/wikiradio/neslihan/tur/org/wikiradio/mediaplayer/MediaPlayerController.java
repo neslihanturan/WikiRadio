@@ -11,7 +11,8 @@ import java.io.IOException;
 
 public class MediaPlayerController {
     private static String LOG_TAG = MediaPlayerController.class.getName();
-    public static MediaPlayerCallback delegate = null;
+    public static MediaPlayerCallback delegateActivity = null;
+    public static MediaPlayerCallback delegateService = null;
     private static String pendingAction = "NONE";
 
     public static void playOrPause(String songurl) throws IOException{
@@ -39,7 +40,8 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
-            delegate.onMediaPlayerPlaying();
+            delegateActivity.onMediaPlayerPlaying();
+            delegateService.onMediaPlayerPlaying();
         }else {
             pendingAction = "PLAY";
             cleanMediaPlayer();
@@ -51,7 +53,8 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
-            delegate.onMediaPlayerPlaying();
+            delegateActivity.onMediaPlayerPlaying();
+            delegateService.onMediaPlayerPlaying();
         }else {
             pendingAction = "PLAY";
             cleanMediaPlayer();
@@ -64,7 +67,8 @@ public class MediaPlayerController {
         if(SingleMediaPlayer.getInstance().getState() > MediaPlayerState.STATE_PREPARED || SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_PLAYBACK_COMPLETED){
             if(SingleMediaPlayer.getInstance().isPlaying()){
                 SingleMediaPlayer.getInstance().pauseMediaPlayer();
-                delegate.onMediaPlayerPaused();
+                delegateActivity.onMediaPlayerPaused();
+                delegateService.onMediaPlayerPaused();
             }
         }
     }

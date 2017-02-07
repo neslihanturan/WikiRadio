@@ -29,25 +29,24 @@
             android:gravity="center"
             android:layout_weight="4"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/playButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Play"
+            android:src="@android:drawable/ic_media_play"
             android:layout_weight="1"/>
-        <Button
+        <ImageButton
             android:id="@+id/nextButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Next"
+            android:src="@android:drawable/ic_media_next"
             android:layout_weight="1"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:id="@+id/imageView"
-            android:src="@drawable/splash_screen_logo"
-            android:contentDescription="@string/collapsed_image" />
+            android:src="@drawable/splash_screen_logo" />
     </LinearLayout>
 
 </LinearLayout>

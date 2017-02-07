@@ -21,6 +21,11 @@ public class Constant {
         public static int STOP_SEEKBAR = -1;
     }
 
+    public interface ISPLAYING{
+        public static String PLAYING = "state.playing";
+        public static String PAUSED = "state.paused";
+    }
+
     public interface ACTION {
         public static String MAIN_ACTION = "action.activity";
         public static String PLAY_ACTION = "action.play";
