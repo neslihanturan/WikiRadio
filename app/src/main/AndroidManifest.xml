@@ -25,8 +25,15 @@
         <activity android:name=".RadioActivity">
         </activity>
         <service android:enabled="true" android:name=".notification.NotificationService" />
-        <service
-            android:name=".proxy.CacheController2" android:exported="false"/>
+        <service android:name=".proxy.CacheController2" android:exported="false"/>
+
+        <receiver android:name=".notification.MusicIntentReceiver">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="action.play" />
+                <action android:name="action.next" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

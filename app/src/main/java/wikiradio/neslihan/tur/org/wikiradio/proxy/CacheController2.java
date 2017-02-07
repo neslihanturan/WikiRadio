@@ -25,6 +25,7 @@ import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
+import wikiradio.neslihan.tur.org.wikiradio.notification.MusicIntentReceiver;
 
 /**
  * Created by nesli on 29.01.2017.
@@ -58,6 +59,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     protected void onHandleIntent(Intent intent) {
             Log.d(LOG_TAG,"cache controller is started");
             RadioActivity.cacheControlCallback = this;
+            MusicIntentReceiver.cacheControlCallback = this;
             categorySet = Constant.categorySet;
             context = this;
             proxy = App.getProxy(this);

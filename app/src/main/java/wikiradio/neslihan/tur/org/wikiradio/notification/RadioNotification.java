@@ -46,13 +46,13 @@ public class RadioNotification{
         //Play intent
         Intent playIntent = new Intent();
         playIntent.setAction(Constant.ACTION.PLAY_ACTION);
-        PendingIntent playPendingIntent =  PendingIntent.getService(context, notificationID, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent playPendingIntent =  PendingIntent.getBroadcast(context, 12345, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.playButton, playPendingIntent);
 
         //Next intent
         Intent nextIntent = new Intent();
         nextIntent.setAction(Constant.ACTION.NEXT_ACTION);
-        PendingIntent nextPendingIntent = PendingIntent.getService(context, notificationID, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 12345, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.nextButton, nextPendingIntent);
     }
 }
