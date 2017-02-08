@@ -1,4 +1,5 @@
 package wikiradio.neslihan.tur.org.wikiradio;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -37,7 +38,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Runnable runnable;
     public static CacheControlCallback cacheControlCallback;
     private int prevPosition;
-    private AudioFile nowPlaying;
+    public static AudioFile nowPlaying;
+    public Context context;
     //StreamProxy streamProxy;
 
     @Override
@@ -45,6 +47,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegateActivity = this;
+        context = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
         initViews();
@@ -62,7 +65,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    playOrPause();
+                    lock();
+                    ButtonListener.playOrPause(context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -72,7 +76,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    nextSong();
+                    lock();
+                    ButtonListener.nextSong(context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

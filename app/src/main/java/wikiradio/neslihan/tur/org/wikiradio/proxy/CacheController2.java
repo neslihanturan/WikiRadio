@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.CountDownLatch;
 
+import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
@@ -60,6 +61,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
             Log.d(LOG_TAG,"cache controller is started");
             RadioActivity.cacheControlCallback = this;
             MusicIntentReceiver.cacheControlCallback = this;
+            ButtonListener.cacheControlCallback = this;
             categorySet = Constant.categorySet;
             context = this;
             proxy = App.getProxy(this);

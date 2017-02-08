@@ -1,6 +1,10 @@
 package wikiradio.neslihan.tur.org.wikiradio;
 
+import com.danikula.videocache.HttpProxyCacheServer;
+
 import java.util.HashSet;
+
+import wikiradio.neslihan.tur.org.wikiradio.proxy.ProxyCacheServer;
 
 /**
  * Created by nesli on 15.12.2016.
@@ -16,6 +20,7 @@ public class Constant {
     public static final String AUDIO_STREAM = "AudioStream";
     public static int NOTIFICATION_ID=0;
     public static int MAX_CACHED_FILE=4;
+    public static HttpProxyCacheServer proxy;
 
     public interface SEEKBAR {
         public static int STOP_SEEKBAR = -1;

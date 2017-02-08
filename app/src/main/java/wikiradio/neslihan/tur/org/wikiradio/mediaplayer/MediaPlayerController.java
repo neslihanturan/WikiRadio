@@ -40,8 +40,10 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
-            delegateActivity.onMediaPlayerPlaying();
-            delegateService.onMediaPlayerPlaying();
+            if(delegateActivity!=null)
+                delegateActivity.onMediaPlayerPlaying();
+            if(delegateService!=null)
+                delegateService.onMediaPlayerPlaying();
         }else {
             pendingAction = "PLAY";
             cleanMediaPlayer();
@@ -53,8 +55,10 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
-            delegateActivity.onMediaPlayerPlaying();
-            delegateService.onMediaPlayerPlaying();
+            if(delegateActivity!=null)
+                delegateActivity.onMediaPlayerPlaying();
+            if(delegateService!=null)
+                delegateService.onMediaPlayerPlaying();
         }else {
             pendingAction = "PLAY";
             cleanMediaPlayer();
@@ -67,8 +71,10 @@ public class MediaPlayerController {
         if(SingleMediaPlayer.getInstance().getState() > MediaPlayerState.STATE_PREPARED || SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_PLAYBACK_COMPLETED){
             if(SingleMediaPlayer.getInstance().isPlaying()){
                 SingleMediaPlayer.getInstance().pauseMediaPlayer();
-                delegateActivity.onMediaPlayerPaused();
-                delegateService.onMediaPlayerPaused();
+                if(delegateActivity!=null)
+                    delegateActivity.onMediaPlayerPaused();
+                if(delegateService!=null)
+                    delegateService.onMediaPlayerPaused();
             }
         }
     }

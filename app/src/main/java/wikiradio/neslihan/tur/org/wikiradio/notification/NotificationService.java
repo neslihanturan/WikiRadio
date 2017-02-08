@@ -6,13 +6,15 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
+import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 
 /**
  * Created by nesli on 26.12.2016.
  */
 
-public class NotificationService extends Service {
+public class NotificationService extends Service implements AudioInfoCallbak {
     private String LOG_TAG = NotificationService.class.getName();
     RadioNotification radioNotification;
 
@@ -29,5 +31,15 @@ public class NotificationService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onSuccess(AudioFile audioFile, Class sender) {
+
+    }
+
+    @Override
+    public void onError(Class sender) {
+
     }
 }

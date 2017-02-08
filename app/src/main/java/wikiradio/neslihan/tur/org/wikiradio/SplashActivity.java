@@ -27,6 +27,7 @@ import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
 import wikiradio.neslihan.tur.org.wikiradio.data.interfaces.MwAPIInterface;
 import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonObject;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
 
@@ -45,6 +46,7 @@ public class SplashActivity extends Activity implements CategoryListCallback{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        Constant.proxy = App.getProxy(this);
         if(!sharedPref.contains("firstRun")){
             replaceToast("it is first run");
             //categorySet = new HashSet<>();

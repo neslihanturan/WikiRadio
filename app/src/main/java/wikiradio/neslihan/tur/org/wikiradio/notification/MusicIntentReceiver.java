@@ -26,7 +26,7 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
  */
 
 public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoCallbak, MediaPlayerCallback {
-    private String LOG_TAG = MusicIntentReceiver.class.getName();
+    private static String LOG_TAG = MusicIntentReceiver.class.getName();
     private Context context;
     public static CacheControlCallback cacheControlCallback;
     MediaPlayer mediaPlayer = null;
