@@ -7,6 +7,9 @@ import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
+
 /**
  * Created by nesli on 24.12.2016.
  */
@@ -68,6 +71,11 @@ public class SingleMediaPlayer extends MediaPlayer {
             public void onCompletion(MediaPlayer mp) {
                 Log.d(LOG_TAG," onCompletion(MediaPlayer mp)");
                 INSTANCE.state = MediaPlayerState.STATE_PLAYBACK_COMPLETED;
+                try {
+                    ButtonListener.nextSong(NotificationService.context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

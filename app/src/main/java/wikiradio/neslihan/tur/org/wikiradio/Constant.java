@@ -4,6 +4,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 
 import java.util.HashSet;
 
+import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.ProxyCacheServer;
 
 /**
@@ -21,6 +22,7 @@ public class Constant {
     public static int NOTIFICATION_ID=0;
     public static int MAX_CACHED_FILE=4;
     public static HttpProxyCacheServer proxy;
+    public static AudioFile nowPlaying;
 
     public interface SEEKBAR {
         public static int STOP_SEEKBAR = -1;

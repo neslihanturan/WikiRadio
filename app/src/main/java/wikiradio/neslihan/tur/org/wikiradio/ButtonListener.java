@@ -27,7 +27,8 @@ public class ButtonListener {
     public static CacheControlCallback cacheControlCallback;
 
     public static void playOrPause(Context context) throws IOException {
-        if(CacheController2.getCurrentURL()==null){
+        //if(CacheController2.getCurrentURL()==null){
+        if(Constant.nowPlaying==null){
             nextSong(context);
         }else{
             MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
@@ -37,7 +38,8 @@ public class ButtonListener {
     public static void nextSong(Context context) throws IOException {
         Log.d(LOG_TAG,"next song requested");
         //lock();
-        App.getProxy(context).unregisterCacheListener((CacheListener) context);
+        RadioActivity.unregisterCacheListener();
+        //TODO: remowe wasted file
         // there is a file that is played previously
         if(CacheController2.getCurrentAudio()!=null){
             Log.d(LOG_TAG,"current audio is null");
@@ -54,22 +56,23 @@ public class ButtonListener {
             newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getUrl()));
             MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
+            RadioActivity.setSecondarySeekbarMax();
             playSong(newAudioFile);
         }
     }
 
     public static void playSong(AudioFile audioFile) throws IOException{
         Log.d(LOG_TAG,"playSong method started");
+        Constant.nowPlaying = audioFile;
         MediaPlayerController.play(audioFile.getProxyUrl());
         // TODO:nowPlaying = audioFile;
-        RadioActivity.nowPlaying = audioFile;
-
+        RadioActivity.registerCacheListener();
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
     }
 
     public static void onSuccess(AudioFile audioFile, Context context) {
         try {
-            Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getUrl());
+            //Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getUrl());
             audioFile.setProxyUrl(Constant.proxy.getProxyUrl(audioFile.getUrl()));
             MediaPlayerController.changeSong(audioFile.getProxyUrl());
             playSong(audioFile);

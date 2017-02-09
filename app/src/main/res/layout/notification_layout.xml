@@ -11,8 +11,9 @@
         android:textAppearance="@style/NotificationContent"
         android:id="@+id/textView1"
         android:text="Wikiradio"
+        android:textColor="@color/colorWhite"
         android:gravity="center"
-        android:layout_weight="1"/>
+        android:layout_weight="0.5"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
             android:id="@+id/textView"
             android:text="Wikiradio"
             android:gravity="center"
+            android:textColor="@color/colorWhite"
             android:layout_weight="4"/>
 
         <ImageButton

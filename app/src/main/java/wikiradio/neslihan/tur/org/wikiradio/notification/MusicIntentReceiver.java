@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
@@ -25,7 +26,7 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
  * Created by nesli on 07.02.2017.
  */
 
-public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoCallbak, MediaPlayerCallback {
+public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoCallbak{
     private static String LOG_TAG = MusicIntentReceiver.class.getName();
     private Context context;
     public static CacheControlCallback cacheControlCallback;
@@ -39,21 +40,23 @@ public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoC
         context = ctx;
 
         //TODO: null p. e. if push activity before service. Because onReceive never triggered.
-        MediaPlayerController.delegateService = this;
+
 
         if (action.equals(
                 android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY)) {
         }else{
             if(Constant.ACTION.PLAY_ACTION.equals(action)) {
                 try {
-                    playOrPause();
+                    lock();
+                    ButtonListener.playOrPause(NotificationService.context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 Log.d(LOG_TAG,"Pressed Play");
             } else if(Constant.ACTION.NEXT_ACTION.equals(action)) {
                 try {
-                    nextSong();
+                    lock();
+                    ButtonListener.nextSong(NotificationService.context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -62,6 +65,13 @@ public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoC
         }
     }
 
+    public static void lock(){
+
+    }
+
+    public static void unlock(){
+
+    }
 
     private void playOrPause() throws IOException {
         //lock();
@@ -119,13 +129,4 @@ public class MusicIntentReceiver extends BroadcastReceiver implements AudioInfoC
 
     }
 
-    @Override
-    public void onMediaPlayerPaused() {
-        RadioNotification.updateNotification(Constant.ISPLAYING.PAUSED);
-    }
-
-    @Override
-    public void onMediaPlayerPlaying() {
-        RadioNotification.updateNotification(Constant.ISPLAYING.PLAYING);
-    }
 }

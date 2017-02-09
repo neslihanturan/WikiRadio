@@ -21,6 +21,7 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
+import wikiradio.neslihan.tur.org.wikiradio.notification.MusicIntentReceiver;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
@@ -30,7 +31,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private String LOG_TAG = RadioActivity.class.getName();
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
-    private SeekBar seekBar;
+    private static SeekBar seekBar;
     private TextView textView;
     private int duration;
     private int amoungToupdate = -1;
@@ -38,8 +39,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Runnable runnable;
     public static CacheControlCallback cacheControlCallback;
     private int prevPosition;
-    public static AudioFile nowPlaying;
-    public Context context;
+    //public static AudioFile nowPlaying;
+    public static Context context;
     //StreamProxy streamProxy;
 
     @Override
@@ -47,6 +48,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegateActivity = this;
+        //MediaPlayerController.delegateService =
         context = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
@@ -60,6 +62,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         textView = (TextView) findViewById(R.id.textView);
     }
+
     public void setListeners(){
         playButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +106,18 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         };
 
     }
+
+    public static void unregisterCacheListener(){
+        Constant.proxy.unregisterCacheListener((CacheListener) context);
+    }
+    public static void registerCacheListener(){
+        Constant.proxy.registerCacheListener((CacheListener) context, Constant.nowPlaying.getUrl());
+    }
+
+    public static void setSecondarySeekbarMax(){
+        seekBar.setSecondaryProgress(seekBar.getMax());
+    }
+
     private void lock(){
         playButton.setEnabled(false);
         nextButton.setEnabled(false);
@@ -131,7 +146,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private void playSong(AudioFile audioFile) throws IOException {
         Log.d(LOG_TAG,"playSong method started");
         MediaPlayerController.play(audioFile.getProxyUrl());
-        nowPlaying = audioFile;
+        //nowPlaying = audioFile;
 
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
 
@@ -163,7 +178,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     @Override
     public void onMediaPlayerPaused() {
         unlock();
-        //updateText();
+        updateText();
         setPausedView();
         stopSeekBar();
     }
@@ -177,15 +192,16 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
 
     private void updateText(){
-        textView.setText("Audio Title: "+nowPlaying.getTitle()+"\n Category:"+nowPlaying.getCategory());
+        if(Constant.nowPlaying!=null)
+            textView.setText("Audio Title: "+Constant.nowPlaying.getTitle()+"\n Category:"+Constant.nowPlaying.getCategory());
     }
 
     private void setPausedView(){
-        playButton.setImageResource(android.R.drawable.ic_media_pause);
+        playButton.setImageResource(android.R.drawable.ic_media_play);
     }
 
     private void setPlayingView(){
-        playButton.setImageResource(android.R.drawable.ic_media_play);
+        playButton.setImageResource(android.R.drawable.ic_media_pause);
     }
 
     private void stopSeekBar(){
@@ -212,14 +228,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
-        try {
-            App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
-            audioFile.setProxyUrl(App.getProxy(this).getProxyUrl(audioFile.getUrl()));
-            MediaPlayerController.changeSong(audioFile.getProxyUrl());
-            playSong(audioFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ButtonListener.onSuccess(audioFile, this);
     }
 
     @Override

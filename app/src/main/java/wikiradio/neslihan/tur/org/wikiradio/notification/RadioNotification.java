@@ -6,28 +6,38 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.R;
+import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 
 /**
  * Created by nesli on 26.12.2016.
  */
 
 public class RadioNotification{
-    private static Context context;
-    public static int notificationID;
-    public static NotificationManager notificationManager;
-    private static Notification notification;
+    private String LOG_TAG = RadioNotification.class.getName();
+    private Context context;
+    public int notificationID;
+    public NotificationManager notificationManager;
+    private Notification notification;
 
-    public RadioNotification(Context context){
+    public RadioNotification(Context context, String playingState){
         this.notificationID = Constant.NOTIFICATION_ID;
         this.context = context;
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification.Builder builder = new Notification.Builder(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_layout);
+        if(playingState.equals(Constant.ISPLAYING.PLAYING)){
+            remoteViews.setImageViewResource(R.id.playButton, android.R.drawable.ic_media_pause);
+        }else if(playingState.equals(Constant.ISPLAYING.PAUSED)){
+            remoteViews.setImageViewResource(R.id.playButton, android.R.drawable.ic_media_play);
+        }
+
         notification = builder.setContentTitle("Music Player")
                 .setTicker("Music Player")
                 .setContentText("Black in Black")
@@ -44,7 +54,11 @@ public class RadioNotification{
         CharSequence contentTitle = "From Shortcuts";
         notificationManager.notify(notificationID, notification);
     }
-    private static void setListeners(RemoteViews remoteViews){
+    private void setListeners(RemoteViews remoteViews){
+
+        if(Constant.nowPlaying!=null){
+            remoteViews.setTextViewText(R.id.textView, Constant.nowPlaying.getTitle());
+        }
         //Play intent
         Intent playIntent = new Intent();
         playIntent.setAction(Constant.ACTION.PLAY_ACTION);
@@ -58,15 +72,7 @@ public class RadioNotification{
         remoteViews.setOnClickPendingIntent(R.id.nextButton, nextPendingIntent);
     }
 
-    public static void updateNotification(String playingState){
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_layout);
-        setListeners(remoteViews);
-        if(playingState.equals(Constant.ISPLAYING.PLAYING)){
-            //do nothing
-        }else if(playingState.equals(Constant.ISPLAYING.PAUSED)){
-            remoteViews.setImageViewResource(R.id.playButton, android.R.drawable.ic_media_pause);
-        }
-        notification.contentView = remoteViews;
-        notificationManager.notify(notificationID, notification);
+    public void updateNotification(String playingState){
+        new RadioNotification(this.context, playingState);
     }
 }
