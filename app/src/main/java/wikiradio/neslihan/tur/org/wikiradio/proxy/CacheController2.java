@@ -70,7 +70,6 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     }
 
     private void cacheFilesOnBackground(){
-        ;
         if (expectedSize<4){
             Log.d(LOG_TAG,"caching files on background");
             DataUtils.getRandomAudio(categorySet,this);

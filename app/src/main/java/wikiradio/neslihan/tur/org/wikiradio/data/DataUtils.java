@@ -14,12 +14,16 @@ import retrofit2.Response;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
+import wikiradio.neslihan.tur.org.wikiradio.data.callback.SummaryCallback;
 import wikiradio.neslihan.tur.org.wikiradio.data.interfaces.MwAPIInterface;
+import wikiradio.neslihan.tur.org.wikiradio.data.interfaces.RestfulAPIInterface;
 import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonObject;
 import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonPage;
 import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonPrefixsearch;
+import wikiradio.neslihan.tur.org.wikiradio.data.pojo.RestfulJsonObject;
 import wikiradio.neslihan.tur.org.wikiradio.data.retrofit.RetrofitServiceCache;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
+import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
 
 /**
  * Created by nesli on 15.12.2016.
@@ -162,6 +166,34 @@ public class DataUtils {
                 }
             });
         }
+    }
+
+    public static void getRandomSummary(final SummaryCallback callback){
+        RestfulAPIInterface restfulAPIInterface = ((RestfulAPIInterface) RetrofitServiceCache.getService(Constant.EN_WIKIPEDIA_BASE_URL,
+                Constant.REST_API));
+        Call<RestfulJsonObject> restfulJsonObjectCall = restfulAPIInterface
+                .getRandomSummary();
+        restfulJsonObjectCall.enqueue((new Callback<RestfulJsonObject>() {
+
+            @Override
+            public void onResponse(Call<RestfulJsonObject> call, Response<RestfulJsonObject> response) {
+                WikipediaPageSummary pageSummary = new WikipediaPageSummary(
+                        response.body().getThumbnail().getWidth(),      //TODO: sometimes there is no thumbnail and throws null point ex.
+                        response.body().getThumbnail().getWidth(),
+                        response.body().getThumbnail().getSource(),
+                        response.body().getExtract(),
+                        response.body().getTitle());
+                Log.d("wikipedia response",response.body().getTitle() + " url"+response.body().getExtract());
+                callback.onSuccess(pageSummary);
+            }
+
+            @Override
+            public void onFailure(Call<RestfulJsonObject> call, Throwable t) {
+                Log.d("wikipedia response","couldnt get data");
+                callback.onError();
+            }
+        }));
+
     }
     /*public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){
         Call<MwJsonObject> commonsQueryResponse = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,

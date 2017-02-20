@@ -41,6 +41,7 @@ public class ButtonListener {
         RadioActivity.unregisterCacheListener();
         //TODO: remowe wasted file
         // there is a file that is played previously
+
         if(CacheController2.getCurrentAudio()!=null){
             Log.d(LOG_TAG,"current audio is null");
             cacheControlCallback.onFileConsumed();

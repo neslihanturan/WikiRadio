@@ -50,7 +50,7 @@ public class MediaPlayerController {
             restartMediaPlayer(songurl);
         }
     }
-    private static void play(FileDescriptor fileDescriptor) throws IOException {
+    public static void play(FileDescriptor fileDescriptor) throws IOException {
         Log.d(LOG_TAG," play(FileDescriptor fileDescriptor)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){

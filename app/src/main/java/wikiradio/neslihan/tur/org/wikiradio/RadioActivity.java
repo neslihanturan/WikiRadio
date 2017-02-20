@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.danikula.videocache.CacheListener;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.Random;
 
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
@@ -26,6 +28,7 @@ import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener, AudioInfoCallbak {
     private String LOG_TAG = RadioActivity.class.getName();
@@ -38,9 +41,11 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private Handler handler;
     private Runnable runnable;
     public static CacheControlCallback cacheControlCallback;
+    public static CacheControlCallback ttsCacheControlCallback;
     private int prevPosition;
     //public static AudioFile nowPlaying;
     public static Context context;
+    private boolean isAudioFile; //true if last played audio is an audio file from commons, false if it is a TTS file
     //StreamProxy streamProxy;
 
     @Override
@@ -151,30 +156,62 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
 
     }
+    private void playSong(FileDescriptor fileDescriptor) throws IOException {
+        Log.d(LOG_TAG,"playSong method started");
+        MediaPlayerController.play(fileDescriptor);
+        //nowPlaying = audioFile;
+
+        //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
+
+    }
     private void nextSong() throws IOException {
         Log.d(LOG_TAG,"next song requested");
         lock();
         App.getProxy(this).unregisterCacheListener(this);
         // there is a file that is played previously
-        if(CacheController2.getCurrentAudio()!=null){
-            Log.d(LOG_TAG,"current audio is null");
-            cacheControlCallback.onFileConsumed();
-        }
-        Log.d(LOG_TAG,"call onNextFileRequested()");
-        cacheControlCallback.onNextFileRequested();
-        AudioFile newAudioFile = CacheController2.getCurrentAudio();
-        if(newAudioFile==null){
-            Log.d(LOG_TAG,"newAudioFile is null");
-            DataUtils.getRandomAudio(Constant.categorySet,this);
+        //TODO:
+        if(getFromAudioCache()){
+            isAudioFile= true;
+            if(CacheController2.getCurrentAudio()!=null){
+                Log.d(LOG_TAG,"current audio is null");
+                cacheControlCallback.onFileConsumed();
+            }
+            Log.d(LOG_TAG,"call onNextFileRequested()");
+            cacheControlCallback.onNextFileRequested();
+            AudioFile newAudioFile = CacheController2.getCurrentAudio();
+            if(newAudioFile==null){
+                Log.d(LOG_TAG,"newAudioFile is null");
+                DataUtils.getRandomAudio(Constant.categorySet,this);
+            }else{
+                Log.d(LOG_TAG,"newAudioFile is NOT null");
+                newAudioFile.setProxyUrl(App.getProxy(this).getProxyUrl(newAudioFile.getUrl()));
+                MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
+                seekBar.setSecondaryProgress(seekBar.getMax());
+                playSong(newAudioFile);
+            }
         }else{
-            Log.d(LOG_TAG,"newAudioFile is NOT null");
-            newAudioFile.setProxyUrl(App.getProxy(this).getProxyUrl(newAudioFile.getUrl()));
-            MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
-            seekBar.setSecondaryProgress(seekBar.getMax());
-            playSong(newAudioFile);
+            isAudioFile = false;
+            if(TTSCacheController.getCurrentFile()!=null){
+                Log.d(LOG_TAG,"current audio is null");
+                ttsCacheControlCallback.onFileConsumed();
+            }
+            ttsCacheControlCallback.onNextFileRequested();
+            FileDescriptor fileDescriptor = TTSCacheController.getCurrentFile();
+            if(fileDescriptor==null){
+                Log.d(LOG_TAG,"newAudioFile is null");
+                DataUtils.getRandomAudio(Constant.categorySet,this);
+            }else{
+                MediaPlayerController.changeSong(fileDescriptor);
+                seekBar.setSecondaryProgress(seekBar.getMax());
+                playSong(fileDescriptor);
+            }
         }
+
     }
 
+    boolean getFromAudioCache(){
+        return true;
+    }
     @Override
     public void onMediaPlayerPaused() {
         unlock();
