@@ -7,7 +7,7 @@ import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 
 /**

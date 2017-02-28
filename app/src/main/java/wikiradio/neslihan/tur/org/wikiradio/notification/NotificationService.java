@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;

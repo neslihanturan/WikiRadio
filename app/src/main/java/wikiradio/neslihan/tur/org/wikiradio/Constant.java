@@ -5,7 +5,6 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import java.util.HashSet;
 
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.ProxyCacheServer;
 
 /**
  * Created by nesli on 15.12.2016.

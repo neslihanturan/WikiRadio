@@ -4,19 +4,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.util.Log;
 
 import java.io.IOException;
 
-import wikiradio.neslihan.tur.org.wikiradio.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
-import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
-import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
-import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
