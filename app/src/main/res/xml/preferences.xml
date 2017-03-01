@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="Audio Source Selection">
+
+        <CheckBoxPreference
+            android:key="checkbox_preference"
+            android:title="Only commons.wikimedia.org audio files"
+            android:summary="Plays audio files from commons.wikimedia.org" />
+
+        <CheckBoxPreference
+            android:key="checkbox_preference"
+            android:title="Only en.wikipedia.org summaries"
+            android:summary="Plays text to speech files from en.wikipedia.org" />
+
+        <CheckBoxPreference
+            android:key="checkbox_preference"
+            android:title="Both of them"
+            android:summary="Plays files from both" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
