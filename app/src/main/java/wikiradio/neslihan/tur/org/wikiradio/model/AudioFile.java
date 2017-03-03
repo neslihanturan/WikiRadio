@@ -8,9 +8,9 @@ import java.util.concurrent.Future;
  * Created by nesli on 15.12.2016.
  */
 
-public class AudioFile {
-    private String url;
-    private String title;
+public class AudioFile extends SourceFile{
+    private String audioUrl;
+    //private String title;
     private int size;
     private String category;
     private int percentsAvailable;
@@ -52,12 +52,12 @@ public class AudioFile {
         this.title = title;
     }
 
-    public String getUrl() {
-        return url;
+    public String getAudioUrl() {
+        return audioUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setAudioUrl(String audioUrl) {
+        this.audioUrl = audioUrl;
     }
 
     public int getSize() {
@@ -103,7 +103,7 @@ public class AudioFile {
     @Override
     public String toString() {
         return "AudioFile{" +
-                "url='" + url + '\'' +
+                "audioUrl='" + audioUrl + '\'' +
                 ", title='" + title + '\'' +
                 ", size=" + size +
                 ", category='" + category + '\'' +

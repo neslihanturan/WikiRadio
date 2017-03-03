@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.danikula.videocache.CacheListener;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioSourceSelector;
@@ -107,7 +106,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         Constant.proxy.unregisterCacheListener((CacheListener) context);
     }
     public static void registerCacheListener(){
-        Constant.proxy.registerCacheListener((CacheListener) context, Constant.nowPlayingAudio.getUrl());
+        Constant.proxy.registerCacheListener((CacheListener) context, Constant.nowPlayingAudio.getAudioUrl());
     }
 
     public static void setSecondarySeekbarMax(){

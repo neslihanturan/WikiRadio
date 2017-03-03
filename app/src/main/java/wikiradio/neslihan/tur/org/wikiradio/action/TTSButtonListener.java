@@ -46,7 +46,7 @@ public class TTSButtonListener{
             //TODO: make please wait animation
         }else{
             Log.d(LOG_TAG,"newAudioFile is NOT null");
-            //newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getUrl()));
+            //newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getAudioUrl()));
             MediaPlayerController.changeSong(fileDescriptor);
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
             RadioActivity.setSecondarySeekbarMax();

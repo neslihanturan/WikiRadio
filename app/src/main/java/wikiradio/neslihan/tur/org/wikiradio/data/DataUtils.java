@@ -113,7 +113,7 @@ public class DataUtils {
                     Object randomValue = values[generator.nextInt(values.length)];
 
                     Log.d(LOG_TAG,"getRandomAudio selected image info: "+((MwJsonPage)randomValue).getImageinfo()[0].toString());
-                    audioFile.setUrl(((MwJsonPage)randomValue).getImageinfo()[0].getUrl());
+                    audioFile.setAudioUrl(((MwJsonPage)randomValue).getImageinfo()[0].getUrl());
                     audioFile.setTitle(((MwJsonPage)randomValue).getImageinfo()[0].getCanonicaltitle());
                     audioFile.setCategory(categoryTitle);
                     audioFile.setSize(((MwJsonPage)randomValue).getImageinfo()[0].getSize());
@@ -152,7 +152,7 @@ public class DataUtils {
                         for(Object obj: values){
                             //Store selected audio in an object
                             AudioFile audioFile = new AudioFile();
-                            audioFile.setUrl(((MwJsonPage) obj).getImageinfo()[0].getUrl());
+                            audioFile.setAudioUrl(((MwJsonPage) obj).getImageinfo()[0].getUrl());
                             audioFile.setTitle(((MwJsonPage) obj).getImageinfo()[0].getCanonicaltitle());
                             audioFile.setCategory(categoryTitle);
                             audioFile.setSize(((MwJsonPage) obj).getImageinfo()[0].getSize());

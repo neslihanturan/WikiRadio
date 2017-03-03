@@ -146,7 +146,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
         Log.d(LOG_TAG,"on select next file");
         if(cachingFileHashMap.size() > 0){
             for(AudioFile audioFile : cachingFileHashMap.values()){
-                currPtr = audioFile.getUrl();
+                currPtr = audioFile.getAudioUrl();
                 return;
             }
         }else{
@@ -165,7 +165,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     public void onBackgroundCachingIsDone(AudioFile audioFile) {
         expectedSize++;
         Log.d(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
-        cachingFileHashMap.put(audioFile.getUrl(),audioFile);
+        cachingFileHashMap.put(audioFile.getAudioUrl(),audioFile);
         cacheFilesOnBackground();
     }
 
@@ -182,7 +182,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
         protected AudioFile doInBackground(Object... params) {
             Log.d(LOG_TAG,"do in background");
             AudioFile audioFile = (AudioFile) params[0];
-            String originUrl = audioFile.getUrl();
+            String originUrl = audioFile.getAudioUrl();
             String title = audioFile.getTitle();
             CacheListener context = (CacheListener) params[1];
             this.cachingIsDoneCallback = (BackgroundCachingIsDone) params[2];

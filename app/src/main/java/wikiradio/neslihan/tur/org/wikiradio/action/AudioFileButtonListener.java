@@ -3,7 +3,6 @@ package wikiradio.neslihan.tur.org.wikiradio.action;
 import android.content.Context;
 import android.util.Log;
 
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
@@ -59,7 +58,7 @@ public class AudioFileButtonListener {
             DataUtils.getRandomAudio(Constant.categorySet,(AudioInfoCallbak) context);
         }else{
             Log.d(LOG_TAG,"newAudioFile is NOT null");
-            newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getUrl()));
+            newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getAudioUrl()));
             MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
             RadioActivity.setSecondarySeekbarMax();
@@ -78,8 +77,8 @@ public class AudioFileButtonListener {
 
     public static void onSuccess(AudioFile audioFile, Context context) {
         try {
-            //Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getUrl());
-            audioFile.setProxyUrl(Constant.proxy.getProxyUrl(audioFile.getUrl()));
+            //Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getAudioUrl());
+            audioFile.setProxyUrl(Constant.proxy.getProxyUrl(audioFile.getAudioUrl()));
             MediaPlayerController.changeSong(audioFile.getProxyUrl());
             playSong(audioFile);
         } catch (IOException e) {
