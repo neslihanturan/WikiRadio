@@ -20,8 +20,8 @@ import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 
 public class TTSButtonListener{
     private static String LOG_TAG = TTSButtonListener.class.getName();
-    private static CacheControlCallback cacheControlCallback;
-    private static CacheControlCallbackForTTS cacheControlCallbackForTTS;
+    public static CacheControlCallback cacheControlCallback;
+    public static CacheControlCallbackForTTS cacheControlCallbackForTTS;
 
 
 
