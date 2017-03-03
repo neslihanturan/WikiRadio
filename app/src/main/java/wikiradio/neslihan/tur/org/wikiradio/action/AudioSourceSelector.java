@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.io.IOException;
+
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 
@@ -31,7 +33,7 @@ public class AudioSourceSelector {
         return null;
     }
 
-    public static void operate(String audioSource, String action, Context context){
+    public static void operate(String action, Context context) throws IOException {
         String audioSourceSelection = selectAudioSource(context);
 
         if (audioSourceSelection.equals("ONLYCOMMONS")){
@@ -50,7 +52,7 @@ public class AudioSourceSelector {
         }
     }
 
-    private static void audioFileActions(String action, Context context){
+    private static void audioFileActions(String action, Context context) throws IOException {
         if(action.equals(Constant.ACTION.NEXT_ACTION)){
             AudioFileButtonListener.nextSong(context);
         }
@@ -59,7 +61,7 @@ public class AudioSourceSelector {
         }
     }
 
-    private static void ttsActions(String action, Context context){
+    private static void ttsActions(String action, Context context) throws IOException {
         if(action.equals(Constant.ACTION.NEXT_ACTION)){
             TTSButtonListener.nextSong(context);
         }

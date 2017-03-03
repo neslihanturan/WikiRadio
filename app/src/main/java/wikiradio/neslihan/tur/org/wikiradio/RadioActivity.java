@@ -16,20 +16,15 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
-import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
-import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
+import wikiradio.neslihan.tur.org.wikiradio.action.AudioSourceSelector;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
-import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 
-public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener, AudioInfoCallbak {
+
+public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener {
     private String LOG_TAG = RadioActivity.class.getName();
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
@@ -44,8 +39,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private int prevPosition;
     //public static AudioFile nowPlayingAudio;
     public static Context context;
-    private boolean isAudioFile; //true if last played audio is an audio file from commons, false if it is a TTS file
-    //StreamProxy streamProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +66,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             public void onClick(View v) {
                 try {
                     lock();
-                    ButtonListener.playOrPause(context);
+                    AudioSourceSelector.operate(Constant.ACTION.PLAY_ACTION,context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -84,7 +77,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             public void onClick(View v) {
                 try {
                     lock();
-                    ButtonListener.nextSong(context);
+                    AudioSourceSelector.operate(Constant.ACTION.NEXT_ACTION,context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -132,85 +125,11 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         nextButton.setEnabled(true);
 
     }
-    private void playOrPause() throws IOException {
-        lock();
-        if(CacheController2.getCurrentURL()==null){
-            nextSong();
-        }else{
-            MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
-        }
-    }
-    /*private void playSong(String proxyURL) throws IOException {
-
-        MediaPlayerController.play(proxyURL);
-        AudioFile audioFile = CacheController2.getCurrentAudio();
-        textView.setText("Audio Title: "+audioFile.getTitle()+"\n Category:"+audioFile.getCategory());
-        App.getProxy(this).registerCacheListener(this, audioFile.getUrl());
-    }*/
-    private void playSong(AudioFile audioFile) throws IOException {
-        Log.d(LOG_TAG,"playSong method started");
-        MediaPlayerController.play(audioFile.getProxyUrl());
-        //nowPlayingAudio = audioFile;
-
-        //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
-
-    }
     private void playSong(FileDescriptor fileDescriptor) throws IOException {
         Log.d(LOG_TAG,"playSong method started");
         MediaPlayerController.play(fileDescriptor);
-        //nowPlayingAudio = audioFile;
-
-        //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
-
-    }
-    private void nextSong() throws IOException {
-        Log.d(LOG_TAG,"next song requested");
-        lock();
-        App.getProxy(this).unregisterCacheListener(this);
-        // there is a file that is played previously
-        //TODO:
-        if(getFromAudioCache()){
-            isAudioFile= true;
-            if(CacheController2.getCurrentAudio()!=null){
-                Log.d(LOG_TAG,"current audio is null");
-                cacheControlCallback.onFileConsumed();
-            }
-            Log.d(LOG_TAG,"call onNextFileRequested()");
-            cacheControlCallback.onNextFileRequested();
-            AudioFile newAudioFile = CacheController2.getCurrentAudio();
-            if(newAudioFile==null){
-                Log.d(LOG_TAG,"newAudioFile is null");
-                DataUtils.getRandomAudio(Constant.categorySet,this);
-            }else{
-                Log.d(LOG_TAG,"newAudioFile is NOT null");
-                newAudioFile.setProxyUrl(App.getProxy(this).getProxyUrl(newAudioFile.getUrl()));
-                MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
-                seekBar.setSecondaryProgress(seekBar.getMax());
-                playSong(newAudioFile);
-            }
-        }else{
-            isAudioFile = false;
-            if(TTSCacheController.getCurrentFile()!=null){
-                Log.d(LOG_TAG,"current audio is null");
-                ttsCacheControlCallback.onFileConsumed();
-            }
-            ttsCacheControlCallback.onNextFileRequested();
-            FileDescriptor fileDescriptor = TTSCacheController.getCurrentFile();
-            if(fileDescriptor==null){
-                Log.d(LOG_TAG,"newAudioFile is null");
-                DataUtils.getRandomAudio(Constant.categorySet,this);
-            }else{
-                MediaPlayerController.changeSong(fileDescriptor);
-                seekBar.setSecondaryProgress(seekBar.getMax());
-                playSong(fileDescriptor);
-            }
-        }
-
     }
 
-    boolean getFromAudioCache(){
-        return true;
-    }
     @Override
     public void onMediaPlayerPaused() {
         unlock();
@@ -260,15 +179,5 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             cacheControlCallback.onCurrentFileCached();
         }
         seekBar.setSecondaryProgress(seekBar.getMax()*percentsAvailable/100);
-    }
-
-    @Override
-    public void onSuccess(AudioFile audioFile, Class sender) {
-        ButtonListener.onSuccess(audioFile, this);
-    }
-
-    @Override
-    public void onError(Class sender) {
-
     }
 }
