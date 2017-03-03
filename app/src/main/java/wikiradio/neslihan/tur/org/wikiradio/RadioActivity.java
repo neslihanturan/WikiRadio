@@ -45,7 +45,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegateActivity = this;
-        //MediaPlayerController.delegateService =
         context = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
         Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
@@ -124,10 +123,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         playButton.setEnabled(true);
         nextButton.setEnabled(true);
 
-    }
-    private void playSong(FileDescriptor fileDescriptor) throws IOException {
-        Log.d(LOG_TAG,"playSong method started");
-        MediaPlayerController.play(fileDescriptor);
     }
 
     @Override
