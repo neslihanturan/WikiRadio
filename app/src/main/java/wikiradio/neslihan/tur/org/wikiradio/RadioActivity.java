@@ -42,7 +42,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     public static CacheControlCallback cacheControlCallback;
     public static CacheControlCallback ttsCacheControlCallback;
     private int prevPosition;
-    //public static AudioFile nowPlaying;
+    //public static AudioFile nowPlayingAudio;
     public static Context context;
     private boolean isAudioFile; //true if last played audio is an audio file from commons, false if it is a TTS file
     //StreamProxy streamProxy;
@@ -115,7 +115,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         Constant.proxy.unregisterCacheListener((CacheListener) context);
     }
     public static void registerCacheListener(){
-        Constant.proxy.registerCacheListener((CacheListener) context, Constant.nowPlaying.getUrl());
+        Constant.proxy.registerCacheListener((CacheListener) context, Constant.nowPlayingAudio.getUrl());
     }
 
     public static void setSecondarySeekbarMax(){
@@ -150,7 +150,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private void playSong(AudioFile audioFile) throws IOException {
         Log.d(LOG_TAG,"playSong method started");
         MediaPlayerController.play(audioFile.getProxyUrl());
-        //nowPlaying = audioFile;
+        //nowPlayingAudio = audioFile;
 
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
 
@@ -158,7 +158,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private void playSong(FileDescriptor fileDescriptor) throws IOException {
         Log.d(LOG_TAG,"playSong method started");
         MediaPlayerController.play(fileDescriptor);
-        //nowPlaying = audioFile;
+        //nowPlayingAudio = audioFile;
 
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
 
@@ -228,8 +228,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
 
     private void updateText(){
-        if(Constant.nowPlaying!=null)
-            textView.setText("Audio Title: "+Constant.nowPlaying.getTitle()+"\n Category:"+Constant.nowPlaying.getCategory());
+        if(Constant.nowPlayingAudio !=null)
+            textView.setText("Audio Title: "+Constant.nowPlayingAudio.getTitle()+"\n Category:"+Constant.nowPlayingAudio.getCategory());
     }
 
     private void setPausedView(){

@@ -25,7 +25,7 @@ public class ButtonListener {
 
     public static void playOrPause(Context context) throws IOException {
         //if(CacheController2.getCurrentURL()==null){
-        if(Constant.nowPlaying==null){
+        if(Constant.nowPlayingAudio ==null){
             nextSong(context);
         }else{
             MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
@@ -61,9 +61,9 @@ public class ButtonListener {
 
     public static void playSong(AudioFile audioFile) throws IOException{
         Log.d(LOG_TAG,"playSong method started");
-        Constant.nowPlaying = audioFile;
+        Constant.nowPlayingAudio = audioFile;
         MediaPlayerController.play(audioFile.getProxyUrl());
-        // TODO:nowPlaying = audioFile;
+        // TODO:nowPlayingAudio = audioFile;
         RadioActivity.registerCacheListener();
         //App.getProxy(this).registerCacheListener(this, audioFile.getProxyUrl());
     }

@@ -5,15 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.R;
-import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 
 /**
  * Created by nesli on 26.12.2016.
@@ -56,8 +51,8 @@ public class RadioNotification{
     }
     private void setListeners(RemoteViews remoteViews){
 
-        if(Constant.nowPlaying!=null){
-            remoteViews.setTextViewText(R.id.textView, Constant.nowPlaying.getTitle());
+        if(Constant.nowPlayingAudio !=null){
+            remoteViews.setTextViewText(R.id.textView, Constant.nowPlayingAudio.getTitle());
         }
         //Play intent
         Intent playIntent = new Intent();
