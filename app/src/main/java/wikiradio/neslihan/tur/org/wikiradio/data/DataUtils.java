@@ -23,6 +23,7 @@ import wikiradio.neslihan.tur.org.wikiradio.data.pojo.MwJsonPrefixsearch;
 import wikiradio.neslihan.tur.org.wikiradio.data.pojo.RestfulJsonObject;
 import wikiradio.neslihan.tur.org.wikiradio.data.retrofit.RetrofitServiceCache;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
+import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
 
 /**
@@ -177,14 +178,23 @@ public class DataUtils {
 
             @Override
             public void onResponse(Call<RestfulJsonObject> call, Response<RestfulJsonObject> response) {
-                WikipediaPageSummary pageSummary = new WikipediaPageSummary(
+               /* WikipediaPageSummary pageSummary = new WikipediaPageSummary(
                         response.body().getThumbnail().getWidth(),      //TODO: sometimes there is no thumbnail and throws null point ex.
                         response.body().getThumbnail().getWidth(),
                         response.body().getThumbnail().getSource(),
                         response.body().getExtract(),
-                        response.body().getTitle());
+                        response.body().getTitle());*/
+
+                TTSFile ttsFile = new TTSFile();
+                ttsFile.setTitle(response.body().getTitle());
+                ttsFile.setPageUrl("http://en.wikipedia.org/wiki/"+response.body().getTitle());
+                ttsFile.setExtract(response.body().getExtract());
+                ttsFile.setThumbnailSource(response.body().getThumbnail().getSource());
+                ttsFile.setThumbnailWidth(response.body().getThumbnail().getWidth());
+                ttsFile.setThumbnailHeight(response.body().getThumbnail().getHeight());
+
                 Log.d("wikipedia response",response.body().getTitle() + " url"+response.body().getExtract());
-                callback.onSuccess(pageSummary);
+                callback.onSuccess(ttsFile);
             }
 
             @Override

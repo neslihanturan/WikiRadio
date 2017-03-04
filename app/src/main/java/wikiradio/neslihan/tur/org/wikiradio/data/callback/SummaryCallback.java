@@ -2,6 +2,7 @@ package wikiradio.neslihan.tur.org.wikiradio.data.callback;
 
 import java.util.HashSet;
 
+import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
 
 /**
@@ -9,6 +10,6 @@ import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
  */
 
 public interface SummaryCallback {
-    void onSuccess(WikipediaPageSummary wikipediaPageSummary);
+    void onSuccess(TTSFile ttsFile);
     void onError();
 }

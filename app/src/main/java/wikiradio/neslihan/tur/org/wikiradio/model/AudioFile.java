@@ -10,15 +10,9 @@ import java.util.concurrent.Future;
 
 public class AudioFile extends SourceFile{
     private String audioUrl;
-    //private String title;
-    private int size;
-    private String category;
-    private int percentsAvailable;
-    private CacheListener cacheListener;
-    private Future threadPtr;
     private boolean isFullyCached;
-    private Thread thread;
     private String proxyUrl;
+    private String category;
 
     public String getProxyUrl() {
         return proxyUrl;
@@ -26,14 +20,6 @@ public class AudioFile extends SourceFile{
 
     public void setProxyUrl(String proxyUrl) {
         this.proxyUrl = proxyUrl;
-    }
-
-    public Thread getThread() {
-        return thread;
-    }
-
-    public void setThread(Thread thread) {
-        this.thread = thread;
     }
 
     public boolean isFullyCached() {
@@ -44,14 +30,6 @@ public class AudioFile extends SourceFile{
         isFullyCached = fullyCached;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getAudioUrl() {
         return audioUrl;
     }
@@ -60,44 +38,12 @@ public class AudioFile extends SourceFile{
         this.audioUrl = audioUrl;
     }
 
-    public int getSize() {
-        return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
     public String getCategory() {
         return category;
     }
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public int getPercentsAvailable() {
-        return percentsAvailable;
-    }
-
-    public void setPercentsAvailable(int percentsAvailable) {
-        this.percentsAvailable = percentsAvailable;
-    }
-
-    public CacheListener getCacheListener() {
-        return cacheListener;
-    }
-
-    public void setCacheListener(CacheListener cacheListener) {
-        this.cacheListener = cacheListener;
-    }
-
-    public Future getThreadPtr() {
-        return threadPtr;
-    }
-
-    public void setThreadPtr(Future threadPtr) {
-        this.threadPtr = threadPtr;
     }
 
     @Override

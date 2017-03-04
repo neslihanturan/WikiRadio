@@ -22,6 +22,7 @@ import java.util.Map;
 import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.SummaryCallback;
+import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 
@@ -30,15 +31,11 @@ import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
  */
 
 public class TTSCacheController extends IntentService implements SummaryCallback, TextToSpeech.OnInitListener, TextToSpeech.OnUtteranceCompletedListener, CacheControlCallback{
-    private static TTSCacheController INSTANCE;
     private static String LOG_TAG = TTSCacheController.class.getName();
-    private static int expectedSize;
-    private ArrayList<String> cachedFiles = new ArrayList<>();
-    private static HashSet<WikipediaPageSummary> wikipediaPageSummaries;
-    private HashMap<String, String> uteranceIDFileNameMap = new HashMap<>();
+    private ArrayList<TTSFile> cachedFiles = new ArrayList<>();
     private TextToSpeech ttobj;
     private Context context;
-    private String candidateFileName;
+    private TTSFile candidateFile;
     private static String selectedFileName;
 
     /**
@@ -66,14 +63,14 @@ public class TTSCacheController extends IntentService implements SummaryCallback
     }
 
     @Override
-    public void onSuccess(WikipediaPageSummary wikipediaPageSummary) {
-        wikipediaPageSummaries.add(wikipediaPageSummary);
+    public void onSuccess(TTSFile ttsFile) {
         HashMap<String, String> myHashRender = new HashMap();
-        String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/" + wikipediaPageSummary.getTitle();
-        String textToConvert = wikipediaPageSummary.getExtract();
+        String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/" + ttsFile.getTitle();
+        String textToConvert = ttsFile.getExtract();
         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, textToConvert);
         ttobj.synthesizeToFile(textToConvert, myHashRender, destinationFileName);
-        candidateFileName = destinationFileName;
+        ttsFile.setFileName(destinationFileName);
+        candidateFile = ttsFile;
         ttobj.setOnUtteranceCompletedListener(this);
 
     }
@@ -92,8 +89,7 @@ public class TTSCacheController extends IntentService implements SummaryCallback
 
     @Override
     public void onUtteranceCompleted(String utteranceId) {
-        cachedFiles.add(candidateFileName);
-        expectedSize++;
+        cachedFiles.add(candidateFile);
         cacheFilesOnBackground();
     }
 
@@ -125,7 +121,7 @@ public class TTSCacheController extends IntentService implements SummaryCallback
             FileInputStream fileInputStream;
             FileDescriptor fd = null;
             try {
-                selectedFileName = cachedFiles.get(0);
+                selectedFileName = cachedFiles.get(0).getFileName();
                 fileInputStream = new FileInputStream(new File(selectedFileName));
                 fd = fileInputStream.getFD();
             } catch (FileNotFoundException e) {
