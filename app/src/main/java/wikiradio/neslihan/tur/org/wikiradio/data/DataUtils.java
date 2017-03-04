@@ -170,6 +170,7 @@ public class DataUtils {
     }
 
     public static void getRandomSummary(final SummaryCallback callback){
+        Log.d(LOG_TAG,"getRandomSummary");
         RestfulAPIInterface restfulAPIInterface = ((RestfulAPIInterface) RetrofitServiceCache.getService(Constant.EN_WIKIPEDIA_BASE_URL,
                 Constant.REST_API));
         Call<RestfulJsonObject> restfulJsonObjectCall = restfulAPIInterface
@@ -193,13 +194,13 @@ public class DataUtils {
                 ttsFile.setThumbnailWidth(response.body().getThumbnail().getWidth());
                 ttsFile.setThumbnailHeight(response.body().getThumbnail().getHeight());
 
-                Log.d("wikipedia response",response.body().getTitle() + " url"+response.body().getExtract());
+                Log.d(LOG_TAG,response.body().getTitle() + " url"+response.body().getExtract());
                 callback.onSuccess(ttsFile);
             }
 
             @Override
             public void onFailure(Call<RestfulJsonObject> call, Throwable t) {
-                Log.d("wikipedia response","couldnt get data");
+                Log.d(LOG_TAG,"couldnt get data");
                 callback.onError();
             }
         }));

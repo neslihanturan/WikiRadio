@@ -7,7 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.action.AudioFileButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
@@ -42,7 +42,7 @@ public class NotificationService extends Service implements AudioInfoCallbak, Me
 
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
-        ButtonListener.onSuccess(audioFile, this);
+        AudioFileButtonListener.onSuccess(audioFile, this);
     }
 
     @Override

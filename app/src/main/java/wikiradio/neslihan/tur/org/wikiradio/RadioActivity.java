@@ -63,6 +63,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
+                    Log.d(LOG_TAG,"playButton.OnClickListener");
                     lock();
                     AudioSourceSelector.operate(Constant.ACTION.PLAY_ACTION,context);
                 } catch (IOException e) {
@@ -74,6 +75,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
+                    Log.d(LOG_TAG,"nextButton.OnClickListener");
                     lock();
                     AudioSourceSelector.operate(Constant.ACTION.NEXT_ACTION,context);
                 } catch (IOException e) {

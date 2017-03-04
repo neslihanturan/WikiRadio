@@ -26,6 +26,7 @@ public class TTSButtonListener{
 
 
     public static void nextSong(Context context) throws IOException {
+        Log.d(LOG_TAG,"nextSong");
         RadioActivity.unregisterCacheListener();
 
         //waste previously playing files, it can be an audio or TTS file
@@ -57,6 +58,7 @@ public class TTSButtonListener{
     }
 
     public static void playOrPause(Context context) throws IOException{
+        Log.d(LOG_TAG,"playOrPause");
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{

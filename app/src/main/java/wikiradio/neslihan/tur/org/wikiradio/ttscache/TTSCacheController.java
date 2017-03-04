@@ -49,7 +49,7 @@ public class TTSCacheController extends IntentService implements SummaryCallback
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Log.d(LOG_TAG," TTSCacheController()");
+        Log.d(LOG_TAG," onHandleIntent");
         RadioActivity.ttsCacheControlCallback = this;
         ttobj = new TextToSpeech(context.getApplicationContext(),this);
         this.context = this;
@@ -57,13 +57,14 @@ public class TTSCacheController extends IntentService implements SummaryCallback
 
     private void cacheFilesOnBackground(){
         if (cachedFiles.size()<4){
-            Log.d(LOG_TAG,"caching tts files on background");
+            Log.d(LOG_TAG,"cacheFilesOnBackground");
             DataUtils.getRandomSummary(this);
         }
     }
 
     @Override
     public void onSuccess(TTSFile ttsFile) {
+        Log.d(LOG_TAG,"onSuccess Summary");
         HashMap<String, String> myHashRender = new HashMap();
         String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/" + ttsFile.getTitle();
         String textToConvert = ttsFile.getExtract();
@@ -77,24 +78,27 @@ public class TTSCacheController extends IntentService implements SummaryCallback
 
     @Override
     public void onError() {
-
+        Log.d(LOG_TAG,"onError Summary");
     }
 
     //on TTS init
     @Override
     public void onInit(int status) {
+        Log.d(LOG_TAG,"onInit TTS");
         ttobj.setLanguage(Locale.US);
         cacheFilesOnBackground();
     }
 
     @Override
     public void onUtteranceCompleted(String utteranceId) {
+        Log.d(LOG_TAG,"onUtteranceCompleted TTS");
         cachedFiles.add(candidateFile);
         cacheFilesOnBackground();
     }
 
     @Override
     public void onFileConsumed() {
+        Log.d(LOG_TAG,"onFileConsumed");
         cachedFiles.remove(selectedFileName);
         File fdelete = new File(selectedFileName);
         if (fdelete.delete()) {
@@ -106,15 +110,17 @@ public class TTSCacheController extends IntentService implements SummaryCallback
 
     @Override
     public void onNextFileRequested() {
+        Log.d(LOG_TAG,"onNextFileRequested");
         selectNextFile();
     }
 
     @Override
     public void onCurrentFileCached() {
-
+        Log.d(LOG_TAG,"onCurrentFileCached");
     }
 
     private FileDescriptor selectNextFile(){
+        Log.d(LOG_TAG,"selectNextFile");
         if(cachedFiles.isEmpty()){
             return null;
         }else{
@@ -135,6 +141,7 @@ public class TTSCacheController extends IntentService implements SummaryCallback
     }
 
     public static FileDescriptor getCurrentFile(){
+        Log.d(LOG_TAG,"getCurrentFile");
         if(selectedFileName!=null){
             FileDescriptor fd = null;
             try {
@@ -149,8 +156,5 @@ public class TTSCacheController extends IntentService implements SummaryCallback
         }else {
             return null;
         }
-
     }
-
-
 }

@@ -27,8 +27,9 @@ public class AudioFileButtonListener {
     public static CacheControlCallbackForTTS cacheControlCallbackForTTS;
 
     public static void playOrPause(Context context) throws IOException {
+        Log.d(LOG_TAG,"playOrPause");
         //if(CacheController2.getCurrentURL()==null){
-        if(Constant.nowPlayingAudio ==null){
+        if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{
             MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
@@ -67,7 +68,7 @@ public class AudioFileButtonListener {
     }
 
     public static void playSong(AudioFile audioFile) throws IOException{
-        Log.d(LOG_TAG,"playSong method started");
+        Log.d(LOG_TAG,"playSong");
         Constant.nowPlayingAudio = audioFile;
         MediaPlayerController.play(audioFile.getProxyUrl());
         // TODO:nowPlayingAudio = audioFile;
@@ -77,6 +78,7 @@ public class AudioFileButtonListener {
 
     public static void onSuccess(AudioFile audioFile, Context context) {
         try {
+            Log.d(LOG_TAG,"onSuccess Audiofile");
             //Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getAudioUrl());
             audioFile.setProxyUrl(Constant.proxy.getProxyUrl(audioFile.getAudioUrl()));
             MediaPlayerController.changeSong(audioFile.getProxyUrl());
