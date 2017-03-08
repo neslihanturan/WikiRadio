@@ -38,6 +38,15 @@
         app:layout_anchor="@id/viewA"
         app:layout_anchorGravity="center_vertical|center"/>
 
+    <Button
+        android:id="@+id/webButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click to go to page"
+        android:layout_margin="96dp"
+        app:layout_anchor="@id/viewA"
+        app:layout_anchorGravity="center_vertical|right"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/playButton"
         android:layout_width="wrap_content"

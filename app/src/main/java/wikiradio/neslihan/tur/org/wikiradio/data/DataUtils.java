@@ -24,7 +24,6 @@ import wikiradio.neslihan.tur.org.wikiradio.data.pojo.RestfulJsonObject;
 import wikiradio.neslihan.tur.org.wikiradio.data.retrofit.RetrofitServiceCache;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
-import wikiradio.neslihan.tur.org.wikiradio.model.WikipediaPageSummary;
 
 /**
  * Created by nesli on 15.12.2016.
@@ -116,6 +115,7 @@ public class DataUtils {
                     Log.d(LOG_TAG,"getRandomAudio selected image info: "+((MwJsonPage)randomValue).getImageinfo()[0].toString());
                     audioFile.setAudioUrl(((MwJsonPage)randomValue).getImageinfo()[0].getUrl());
                     audioFile.setTitle(((MwJsonPage)randomValue).getImageinfo()[0].getCanonicaltitle());
+                    audioFile.setPageUrl("https://commons.wikimedia.org/wiki/"+audioFile.getTitle());
                     audioFile.setCategory(categoryTitle);
                     audioFile.setSize(((MwJsonPage)randomValue).getImageinfo()[0].getSize());
                     Log.d(LOG_TAG,"getRandomAudio is finishing, RandomAudioCallback is:" + callback);
@@ -157,6 +157,7 @@ public class DataUtils {
                             audioFile.setTitle(((MwJsonPage) obj).getImageinfo()[0].getCanonicaltitle());
                             audioFile.setCategory(categoryTitle);
                             audioFile.setSize(((MwJsonPage) obj).getImageinfo()[0].getSize());
+                            audioFile.setPageUrl("https://commons.wikimedia.org/wiki/"+audioFile.getTitle());
                             callback.onSuccess(audioFile, AudioInfoCallbak.class);
                         }
                     }
@@ -188,7 +189,8 @@ public class DataUtils {
 
                 TTSFile ttsFile = new TTSFile();
                 ttsFile.setTitle(response.body().getTitle());
-                ttsFile.setPageUrl("http://en.wikipedia.org/wiki/"+response.body().getTitle());
+                ttsFile.setPageUrl("http://en.wikipedia.org/wiki/"+ttsFile.getTitle());
+                Log.d(LOG_TAG,"page url of tts "+ttsFile.getPageUrl());
                 ttsFile.setExtract(response.body().getExtract());
                 ttsFile.setThumbnailSource(response.body().getThumbnail().getSource());
                 ttsFile.setThumbnailWidth(response.body().getThumbnail().getWidth());
@@ -206,33 +208,5 @@ public class DataUtils {
         }));
 
     }
-    /*public static void getRandomCategory2(String gaccontinue, final CategoryListCallback callback){
-        Call<MwJsonObject> commonsQueryResponse = ((MwAPIInterface)RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
-                Constant.MEDIA_WIKI_API))
-                .getRelevantCategories2(gaccontinue);
-        commonsQueryResponse.enqueue(new Callback<MwJsonObject>() {
-            @Override
-            public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
-                //if continue, recursive call with new psoffset
-                if(response.body().getContinueField()!=null){
-                    if(response.body().getContinueField().getGaccontinue()!=null)
-                        getRandomCategory2(response.body().getContinueField().getGaccontinue(),callback);
-                    return;
-                }
-                Log.d(LOG_TAG,"getRandomCategory2 method onResponse");
-                ArrayList<String> categoryList = new ArrayList<>();
-                for(String key: response.body().getQuery().getPages().keySet()){
-                    //Log.d("i","gson "+response.body().getQuery().getPages().get(key).getTitle());
-                    categoryList.add(response.body().getQuery().getPages().get(key).getTitle());
-                }
-                Log.d(LOG_TAG,"getRandomCategory2 is finishing, RandomCategoryCallback is "+callback);
-                callback.onSuccess(categoryList);
-                Log.d(LOG_TAG,"getRandomCategory2 method is finished, CategoryListCallback.onSuccess method has been thrown");
-            }
-            @Override
-            public void onFailure(Call<MwJsonObject> call, Throwable t) {
-                Log.d(LOG_TAG,"getRandomCategory2 method is finished, CategoryListCallback2.onFailure method has been thrown");
-            }
-        });
-    }*/
+
 }

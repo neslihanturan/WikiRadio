@@ -23,7 +23,7 @@ public class CommonsCacheController extends AbstractCacheController implements T
     }
 
     @Override
-    public void onFileConsumed() {
+    public void onFileConsumed(String curPtr) {
 
     }
 

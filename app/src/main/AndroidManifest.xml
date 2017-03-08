@@ -24,7 +24,10 @@
         </activity>
         <activity android:name=".RadioActivity">
         </activity>
+        <activity android:name=".UserSettingsActivity">
+        </activity>
         <service android:enabled="true" android:name=".notification.NotificationService" />
+        <service android:enabled="true" android:name=".ttscache.TTSCacheController" />
         <service android:name=".proxy.CacheController2" android:exported="false"/>
 
         <receiver android:name=".notification.MusicIntentReceiver">

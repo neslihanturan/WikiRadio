@@ -19,9 +19,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
+import wikiradio.neslihan.tur.org.wikiradio.action.AudioFileButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.action.TTSButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
@@ -58,9 +59,11 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     @Override
     protected void onHandleIntent(Intent intent) {
             Log.d(LOG_TAG,"cache controller is started");
-            RadioActivity.cacheControlCallback = this;
-            MusicIntentReceiver.cacheControlCallback = this;
-            ButtonListener.cacheControlCallback = this;
+            //RadioActivity.cacheControlCallback = this;
+            //MusicIntentReceiver.cacheControlCallback = this;
+            //ButtonListener.cacheControlCallback = this;
+            AudioFileButtonListener.cacheControlCallback = this;
+            TTSButtonListener.cacheControlCallback = this;
             categorySet = Constant.categorySet;
             context = this;
             proxy = App.getProxy(this);
@@ -114,9 +117,9 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     }
 
     @Override
-    public void onFileConsumed() {
+    public void onFileConsumed(String currPtr) {
         expectedSize--;
-        Log.d(LOG_TAG,"onfileconsumed title:"+cachingFileHashMap.get(currPtr).getTitle());
+        //Log.d(LOG_TAG,"onfileconsumed title:"+cachingFileHashMap.get(currPtr).getTitle());
 
         File fdelete;
 
@@ -130,7 +133,10 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
         } else {
             Log.d(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
         }
-        cachingFileHashMap.remove(currPtr);
+        if(cachingFileHashMap.containsKey(currPtr)){
+            cachingFileHashMap.remove(currPtr);
+        }
+
 
         cacheFilesOnBackground();
     }

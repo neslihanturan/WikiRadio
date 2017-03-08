@@ -7,7 +7,8 @@ import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
-import wikiradio.neslihan.tur.org.wikiradio.action.ButtonListener;
+import wikiradio.neslihan.tur.org.wikiradio.Constant;
+import wikiradio.neslihan.tur.org.wikiradio.action.AudioSourceSelector;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 
 /**
@@ -72,7 +73,7 @@ public class SingleMediaPlayer extends MediaPlayer {
                 Log.d(LOG_TAG," onCompletion(MediaPlayer mp)");
                 INSTANCE.state = MediaPlayerState.STATE_PLAYBACK_COMPLETED;
                 try {
-                    ButtonListener.nextSong(NotificationService.context);
+                    AudioSourceSelector.operate(Constant.ACTION.NEXT_ACTION,NotificationService.context);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

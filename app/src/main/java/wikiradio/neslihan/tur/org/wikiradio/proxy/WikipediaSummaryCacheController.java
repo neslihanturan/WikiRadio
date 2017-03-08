@@ -24,7 +24,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     }
 
     @Override
-    public void onFileConsumed() {
+    public void onFileConsumed(String curPtr) {
 
     }
 

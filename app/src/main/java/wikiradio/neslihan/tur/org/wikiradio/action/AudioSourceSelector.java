@@ -52,9 +52,11 @@ public class AudioSourceSelector {
         else if (audioSourceSelection.equals("BOTH")){
             if (Math.random() < 0.5) {
                 audioFileActions(action, context);
+                Log.d(LOG_TAG,"audioFileActions selected");
             }
             else {
                 ttsActions(action, context);
+                Log.d(LOG_TAG,"ttsActions selected");
             }
         }
     }

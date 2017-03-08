@@ -43,12 +43,13 @@ public class AudioFileButtonListener {
         //TODO: remowe wasted file
         // there is a file that is played previously
 
-        if(CacheController2.getCurrentAudio()!=null){
-            Log.d(LOG_TAG,"current audio is null");
-            cacheControlCallback.onFileConsumed();
+        if(Constant.isAudioPlaying && Constant.nowPlayingAudio != null){
+            Log.d(LOG_TAG,"an audio is playing");
+            cacheControlCallback.onFileConsumed(Constant.nowPlayingAudio.getAudioUrl());
         }
-        else if (TTSCacheController.getCurrentFile()!=null){
-            cacheControlCallbackForTTS.onFileConsumed();
+        else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
+            Log.d(LOG_TAG,"a file is playing");
+            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile.getFileName());
         }
 
         Log.d(LOG_TAG,"call onNextFileRequested()");
@@ -70,6 +71,7 @@ public class AudioFileButtonListener {
     public static void playSong(AudioFile audioFile) throws IOException{
         Log.d(LOG_TAG,"playSong");
         Constant.nowPlayingAudio = audioFile;
+        Constant.isAudioPlaying = true;
         MediaPlayerController.play(audioFile.getProxyUrl());
         // TODO:nowPlayingAudio = audioFile;
         RadioActivity.registerCacheListener();

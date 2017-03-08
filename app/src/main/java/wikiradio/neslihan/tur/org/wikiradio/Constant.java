@@ -6,6 +6,7 @@ import java.io.FileDescriptor;
 import java.util.HashSet;
 
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
+import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 
 /**
  * Created by nesli on 15.12.2016.
@@ -23,7 +24,8 @@ public class Constant {
     public static int MAX_CACHED_FILE=4;
     public static HttpProxyCacheServer proxy;
     public static AudioFile nowPlayingAudio;
-    public static FileDescriptor nowPlayingFile;
+    public static TTSFile nowPlayingFile;
+    public static boolean isAudioPlaying = true; //false means a tts file is playing
 
     public interface SEEKBAR {
         public static int STOP_SEEKBAR = -1;

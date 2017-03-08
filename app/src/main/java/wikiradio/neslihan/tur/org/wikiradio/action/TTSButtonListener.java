@@ -9,10 +9,12 @@ import java.io.IOException;
 import wikiradio.neslihan.tur.org.wikiradio.Constant;
 import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
+import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallbackForTTS;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheStatusCallback;
 
 /**
  * Created by nesli on 28.02.2017.
@@ -22,6 +24,8 @@ public class TTSButtonListener{
     private static String LOG_TAG = TTSButtonListener.class.getName();
     public static CacheControlCallback cacheControlCallback;
     public static CacheControlCallbackForTTS cacheControlCallbackForTTS;
+    private static Context waitingContext;
+    public static boolean isActionWaits;
 
 
 
@@ -29,32 +33,38 @@ public class TTSButtonListener{
         Log.d(LOG_TAG,"nextSong");
         RadioActivity.unregisterCacheListener();
 
+
         //waste previously playing files, it can be an audio or TTS file
-        if(CacheController2.getCurrentAudio()!=null){
-            Log.d(LOG_TAG,"current audio is null");
-            cacheControlCallback.onFileConsumed();
+        if(Constant.isAudioPlaying && Constant.nowPlayingAudio != null){
+            Log.d(LOG_TAG,"an audio is playing");
+            cacheControlCallback.onFileConsumed(Constant.nowPlayingAudio.getAudioUrl());
         }
-        else if (TTSCacheController.getCurrentFile()!=null){
-            cacheControlCallbackForTTS.onFileConsumed();
+        else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
+            Log.d(LOG_TAG,"a file is playing: "+Constant.nowPlayingFile.getFileName());
+            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile.getFileName());
         }
 
         //request next file
         cacheControlCallbackForTTS.onNextFileRequested();
 
-        FileDescriptor fileDescriptor = TTSCacheController.getCurrentFile();
-        if(fileDescriptor==null){
-            Log.d(LOG_TAG,"newAudioFile is null");
-            //TODO: make please wait animation
-        }else{
+
+        TTSFile selectedTTSFile = TTSCacheController.getCurrentFile();
+
+        if(selectedTTSFile==null){
+            Log.d(LOG_TAG,"selectedTTSFile == null");
+            isActionWaits = true;
+            waitingContext = context;
+            RadioActivity.waitAnimation();
+        }else {
+            FileDescriptor fileDescriptor = selectedTTSFile.getFileDescriptor();
+
             Log.d(LOG_TAG,"newAudioFile is NOT null");
             //newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getAudioUrl()));
             MediaPlayerController.changeSong(fileDescriptor);
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
             RadioActivity.setSecondarySeekbarMax();
-            playSong(fileDescriptor);
+            playSong(selectedTTSFile);
         }
-
-
     }
 
     public static void playOrPause(Context context) throws IOException{
@@ -62,14 +72,32 @@ public class TTSButtonListener{
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{
-            MediaPlayerController.playOrPause(TTSCacheController.getCurrentFile());
+            MediaPlayerController.playOrPause(TTSCacheController.getCurrentFile().getFileDescriptor());
         }
     }
 
-    private static void playSong(FileDescriptor fileDescriptor) throws IOException {
-        Constant.nowPlayingFile = fileDescriptor;
-        MediaPlayerController.play(fileDescriptor);
+    private static void playSong(TTSFile ttsFile) throws IOException {
+        isActionWaits = false;
+        Constant.nowPlayingFile = ttsFile;
+        Constant.isAudioPlaying = false;
+        MediaPlayerController.play(ttsFile.getFileDescriptor());
         // TODO:nowPlayingAudio = audioFile;
         //RadioActivity.registerCacheListener();
+    }
+
+    public static void onNewFileCached() {
+        try {
+            if(isActionWaits){
+                //RadioActivity.replaceToast("operate waiting audio");
+                Log.d(LOG_TAG,"onNewFileCached");
+                isActionWaits = false;
+                nextSong(waitingContext);
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

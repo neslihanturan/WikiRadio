@@ -4,7 +4,7 @@ package wikiradio.neslihan.tur.org.wikiradio.model;
  * Created by nesli on 04.03.2017.
  */
 
-public abstract class SourceFile {
+public class SourceFile {
     //private inheritance is not possible
     protected String pageUrl;
     protected String title;

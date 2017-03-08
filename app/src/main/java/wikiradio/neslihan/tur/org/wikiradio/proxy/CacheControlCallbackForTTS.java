@@ -5,7 +5,7 @@ package wikiradio.neslihan.tur.org.wikiradio.proxy;
  */
 
 public interface CacheControlCallbackForTTS {
-    void onFileConsumed();
+    void onFileConsumed(String currPtr);
     void onNextFileRequested();
     void onCurrentFileCached();
 }
