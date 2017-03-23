@@ -19,6 +19,7 @@ import com.danikula.videocache.CacheListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioFileButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioSourceSelector;
@@ -178,6 +179,20 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
                 int targetPosition =  MediaPlayerController.getCurrentPosition();
                 seekBar.setProgress(targetPosition);
                 prevPosition = targetPosition;
+                secondsTextView.setText(String.format("Time %02d:%02d:%02d: / %02d:%02d:%02d:",
+                        TimeUnit.MILLISECONDS.toHours(targetPosition),
+                        TimeUnit.MILLISECONDS.toMinutes(targetPosition) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(targetPosition)),
+                        TimeUnit.MILLISECONDS.toSeconds(targetPosition) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(targetPosition)),
+
+                        TimeUnit.MILLISECONDS.toHours(MediaPlayerController.getDuration()),
+                        TimeUnit.MILLISECONDS.toMinutes(MediaPlayerController.getDuration()) -
+                                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(MediaPlayerController.getDuration())),
+                        TimeUnit.MILLISECONDS.toSeconds(MediaPlayerController.getDuration()) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(MediaPlayerController.getDuration()))
+                ));
+
                 if(amoungToupdate != Constant.SEEKBAR.STOP_SEEKBAR){
                     handler.postDelayed(this, amoungToupdate);
                 }
@@ -271,7 +286,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         amoungToupdate = Constant.SEEKBAR.STOP_SEEKBAR;
     }
     private void startSeekBar(){
-        duration = SingleMediaPlayer.getInstance().getDuration();
+        duration = MediaPlayerController.getDuration();
         seekBar.setMax(duration);
         Log.d(LOG_TAG,"onMediaPlayerPlaying");
         amoungToupdate = duration / 1000;
@@ -310,6 +325,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.show();
     }
+
 
 
 }

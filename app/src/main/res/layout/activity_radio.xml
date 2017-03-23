@@ -149,7 +149,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="96dp"
         android:text="Seconds:"
-        app:layout_anchor="@id/dummy4"
-        app:layout_anchorGravity="bottom"/>
+        app:layout_anchor="@id/viewA"
+        app:layout_anchorGravity="bottom|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

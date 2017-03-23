@@ -133,7 +133,7 @@ public class MediaPlayerController {
     public static int getDuration(){
         if(SingleMediaPlayer.getInstance().getState() >=3){
             //// !(STATE_IDLE | STATE_INITIALIZED |  STATE_ERROR )
-            return SingleMediaPlayer.getInstance().getCurrentPosition();
+            return SingleMediaPlayer.getInstance().getDuration();
         } else {
             return 0;
         }
