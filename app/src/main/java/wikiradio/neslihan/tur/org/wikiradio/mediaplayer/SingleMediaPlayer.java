@@ -153,4 +153,12 @@ public class SingleMediaPlayer extends MediaPlayer {
     public void setState(int state) {
         this.state = state;
     }
+
+    @Override
+    public void seekTo(int msec) throws IllegalStateException {
+        // allowed at {Prepared, Started, Paused, PlaybackCompleted}
+        // permitted at {Idle, Initialized, Stopped, Error}
+        Log.d(LOG_TAG,"seel to");
+        super.seekTo(msec);
+    }
 }

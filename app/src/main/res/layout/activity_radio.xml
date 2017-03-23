@@ -48,6 +48,26 @@
         app:layout_anchorGravity="center_vertical|right"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/rewindButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@android:drawable/ic_media_rew"
+        app:fabSize="normal"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        android:clickable="true"
+        app:layout_anchor="@id/viewA"
+        app:layout_anchorGravity="bottom|start"/>
+
+    <View
+        android:id="@+id/dummy1"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        app:layout_anchor="@id/rewindButton"
+        app:layout_anchorGravity="center|end" />
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/playButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,8 +77,8 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         android:clickable="true"
-        app:layout_anchor="@id/viewA"
-        app:layout_anchorGravity="bottom|start"/>
+        app:layout_anchor="@id/dummy1"
+        app:layout_anchorGravity="center|end"/>
 
     <View
         android:id="@+id/dummy"
@@ -80,6 +100,25 @@
         app:layout_anchorGravity="center|end" />
 
     <View
+        android:id="@+id/dummy3"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        app:layout_anchor="@id/nextButton"
+        app:layout_anchorGravity="center|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/forwardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@android:drawable/ic_media_ff"
+        app:fabSize="mini"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:layout_anchor="@id/dummy3"
+        app:layout_anchorGravity="center|end" />
+
+    <View
         android:id="@+id/dummy2"
         android:layout_width="96dp"
         android:layout_height="96dp"
@@ -97,5 +136,20 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="16dp" />
+    <View
+        android:id="@+id/dummy4"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_anchor="@id/seekBar"
+        app:layout_anchorGravity="bottom|end" />
+
+    <TextView
+        android:id="@+id/secondTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="96dp"
+        android:text="Seconds:"
+        app:layout_anchor="@id/dummy4"
+        app:layout_anchorGravity="bottom"/>
 
 </android.support.design.widget.CoordinatorLayout>

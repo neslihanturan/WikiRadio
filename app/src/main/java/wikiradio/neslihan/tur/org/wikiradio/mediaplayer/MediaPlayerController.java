@@ -119,6 +119,25 @@ public class MediaPlayerController {
             SingleMediaPlayer.getInstance().prepareMediaPlayer(fileDescriptor);
         }
     }
+    public static void seekTo(int seekPosition){
+        Log.d(LOG_TAG,"seek to: "+ seekPosition);
+        SingleMediaPlayer.getInstance().seekTo(seekPosition);
+    }
+    public static int getCurrentPosition(){
+        if(SingleMediaPlayer.getInstance().getState() != MediaPlayerState.STATE_ERROR){
+            return SingleMediaPlayer.getInstance().getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+    public static int getDuration(){
+        if(SingleMediaPlayer.getInstance().getState() >=3){
+            //// !(STATE_IDLE | STATE_INITIALIZED |  STATE_ERROR )
+            return SingleMediaPlayer.getInstance().getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
     public static String getNowPlayingURL(){
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_INITIALIZED){
             return SingleMediaPlayer.getInstance().getDataSourceURL();

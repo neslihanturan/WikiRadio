@@ -69,6 +69,12 @@ public class AudioSourceSelector {
         else if(action.equals(Constant.ACTION.PLAY_ACTION)){
             AudioFileButtonListener.playOrPause(context);
         }
+        else if(action.equals(Constant.ACTION.FORWARD_ACTION)){
+            AudioFileButtonListener.seekToForward();
+        }
+        else if(action.equals(Constant.ACTION.REWIND_ACTION)){
+            AudioFileButtonListener.seekToRewind();
+        }
     }
 
     private static void ttsActions(String action, Context context) throws IOException {
@@ -78,6 +84,12 @@ public class AudioSourceSelector {
         }
         else if(action.equals(Constant.ACTION.PLAY_ACTION)){
             TTSButtonListener.playOrPause(context);
+        }
+        else if(action.equals(Constant.ACTION.FORWARD_ACTION)){
+            TTSButtonListener.seekToForward();
+        }
+        else if(action.equals(Constant.ACTION.REWIND_ACTION)){
+            TTSButtonListener.seekToRewind();
         }
     }
 

@@ -30,15 +30,18 @@ import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheStatusCallback;
 
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener,AudioInfoCallbak{
     private String LOG_TAG = RadioActivity.class.getName();
     private FloatingActionButton playButton;
     private FloatingActionButton nextButton;
+    private FloatingActionButton fastForwardButton;
+    private FloatingActionButton rewindButton;
+
     private static SeekBar seekBar;
-    private TextView textView;
+    private TextView infoTextView;
+    private TextView secondsTextView;
     private Button webButton;
     private int duration;
     private int amoungToupdate = -1;
@@ -86,8 +89,12 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     public void initViews(){
         playButton = (FloatingActionButton) findViewById(R.id.playButton);
         nextButton = (FloatingActionButton)findViewById(R.id.nextButton);
+        fastForwardButton = (FloatingActionButton)findViewById(R.id.forwardButton);
+        rewindButton = (FloatingActionButton)findViewById(R.id.rewindButton);
+        secondsTextView = (TextView)findViewById(R.id.secondTextView);
+
         seekBar = (SeekBar) findViewById(R.id.seekBar);
-        textView = (TextView) findViewById(R.id.textView);
+        infoTextView = (TextView) findViewById(R.id.textView);
         webButton = (Button) findViewById(R.id.webButton);
     }
 
@@ -116,7 +123,26 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
                 }
             }
         });
-
+        fastForwardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    AudioSourceSelector.operate(Constant.ACTION.FORWARD_ACTION,context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        rewindButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    AudioSourceSelector.operate(Constant.ACTION.REWIND_ACTION,context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         webButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +175,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         runnable = new Runnable(){
             @Override
             public void run() {
-                int targetPosition =  SingleMediaPlayer.getInstance().getCurrentPosition();
+                int targetPosition =  MediaPlayerController.getCurrentPosition();
                 seekBar.setProgress(targetPosition);
                 prevPosition = targetPosition;
                 if(amoungToupdate != Constant.SEEKBAR.STOP_SEEKBAR){
@@ -216,9 +242,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         String audioCategory = "";
 */
         if(Constant.isAudioPlaying){ //means audio file is playing
-            textView.setText("Source: commons.wikimedia.org"+"\nAudio Title: "+Constant.nowPlayingAudio.getTitle()+"\n Category:"+Constant.nowPlayingAudio.getCategory());
+            infoTextView.setText("Source: commons.wikimedia.org"+"\nAudio Title: "+Constant.nowPlayingAudio.getTitle()+"\n Category:"+Constant.nowPlayingAudio.getCategory());
         }else {
-            textView.setText("Source: en.wikipedia.org"+"\nAudio Title: "+Constant.nowPlayingFile.getTitle());
+            infoTextView.setText("Source: en.wikipedia.org"+"\nAudio Title: "+Constant.nowPlayingFile.getTitle());
         }
 
         /*if(Constant.nowPlayingAudio !=null){
@@ -228,7 +254,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         if(Constant.nowPlayingFile != null){
             fileTitle = Constant.nowPlayingFile.getTitle();
         }
-        textView.setText("Audio Title: "+audioTitle+"\n Category:"+audioCategory
+        infoTextView.setText("Audio Title: "+audioTitle+"\n Category:"+audioCategory
                 +"\n File Title:"+fileTitle);
 */
     }

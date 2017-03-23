@@ -40,7 +40,7 @@ public class Constant {
         public static String MAIN_ACTION = "action.activity";
         public static String PLAY_ACTION = "action.play";
         public static String NEXT_ACTION = "action.next";
-        public static String SKIP_FORWARD_ACTION = "action.skip_forward";
-        public static String SKIP_BACKWARD_ACTION = "action.skip_backwards ";
+        public static String FORWARD_ACTION = "action.skip_forward";
+        public static String REWIND_ACTION = "action.skip_backwards ";
     }
 }

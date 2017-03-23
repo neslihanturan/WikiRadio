@@ -89,4 +89,19 @@ public class AudioFileButtonListener {
             e.printStackTrace();
         }
     }
+
+    public static void seekToForward(){
+        Log.d(LOG_TAG,"seekTo Duration:"+MediaPlayerController.getCurrentPosition()+ "seeked to: "+(MediaPlayerController.getCurrentPosition()+
+                MediaPlayerController.getDuration()/2)+"");
+        MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()+
+                                        MediaPlayerController.getDuration()/10);
+    }
+
+
+    public static void seekToRewind(){
+        Log.d(LOG_TAG,"seekTo Duration:"+MediaPlayerController.getCurrentPosition()+ "seeked to: "+(MediaPlayerController.getCurrentPosition()-
+                MediaPlayerController.getDuration()/2)+"");
+        MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()-
+                MediaPlayerController.getDuration()/10);
+    }
 }
