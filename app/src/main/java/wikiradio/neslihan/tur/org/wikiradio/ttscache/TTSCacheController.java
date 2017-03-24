@@ -80,7 +80,15 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     public void onSuccess(TTSFile ttsFile) {
         Log.d(LOG_TAG,"onSuccess Summary");
         HashMap<String, String> myHashRender = new HashMap();
-        String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/" + ttsFile.getTitle();
+
+        File folder = new File(Environment.getExternalStorageDirectory() + "/ttscache");
+        boolean success = true;
+        if (!folder.exists()) {
+            folder.mkdir(); // create dir if not exists
+        }
+
+        String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/ttscache/" +ttsFile.getTitle();
+        //context.getExternalCacheDir()+"/tts-cache/"+ttsFile.getTitle();
         String textToConvert = ttsFile.getExtract();
         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, textToConvert);
         ttobj.synthesizeToFile(textToConvert, myHashRender, destinationFileName);
@@ -90,20 +98,6 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
         ttobj.setOnUtteranceCompletedListener(this);
 
     }
-    /*
-    @Override
-    public void onDestroy() {
-
-
-        //Close the Text to Speech Library
-        if(ttobj != null) {
-
-            ttobj.stop();
-            ttobj.shutdown();
-            Log.d(LOG_TAG, "TTS Destroyed");
-        }
-        super.onDestroy();
-    }*/
 
     @Override
     public void onError() {
@@ -155,6 +149,21 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     @Override
     public void onCurrentFileCached() {
         Log.d(LOG_TAG,"onCurrentFileCached");
+    }
+
+    @Override
+    public void onEmptyCache() {
+        Log.d(LOG_TAG,"worked");
+        File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/ttscache/");
+        if (dir.isDirectory())
+        {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                new File(dir, children[i]).delete();
+                Log.d(LOG_TAG,"file is deleted");
+            }
+        }
     }
 
     private FileDescriptor selectNextFile(){

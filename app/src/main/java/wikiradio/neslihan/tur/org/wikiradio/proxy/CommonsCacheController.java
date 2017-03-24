@@ -38,6 +38,11 @@ public class CommonsCacheController extends AbstractCacheController implements T
     }
 
     @Override
+    public void onEmptyCache() {
+
+    }
+
+    @Override
     public void onInit(int status) {
 
     }

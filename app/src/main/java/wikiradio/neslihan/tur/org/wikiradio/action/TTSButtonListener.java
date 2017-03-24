@@ -111,4 +111,11 @@ public class TTSButtonListener{
         MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()-
                 MediaPlayerController.getDuration()/10);
     }
+
+    // The structure is weird here. However there is no need to apply this on AudioFileButtonListener too
+    public static void onStopActivity(){
+        Log.d(LOG_TAG,"on stop activity");
+        cacheControlCallback.onEmptyCache();
+        cacheControlCallbackForTTS.onEmptyCache();
+    }
 }

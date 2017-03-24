@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioFileButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioSourceSelector;
+import wikiradio.neslihan.tur.org.wikiradio.action.TTSButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
@@ -232,6 +233,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     protected void onDestroy() {
         super.onDestroy();
         TTSCacheController.destroyTTS();
+        Log.d(LOG_TAG,"on stop activity");
+        TTSButtonListener.onStopActivity();
 
     }
 
@@ -252,26 +255,11 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
 
     private void updateText(){
-        /*String audioTitle = "";
-        String fileTitle = "";
-        String audioCategory = "";
-*/
         if(Constant.isAudioPlaying){ //means audio file is playing
             infoTextView.setText("Source: commons.wikimedia.org"+"\nAudio Title: "+Constant.nowPlayingAudio.getTitle()+"\n Category:"+Constant.nowPlayingAudio.getCategory());
         }else {
             infoTextView.setText("Source: en.wikipedia.org"+"\nAudio Title: "+Constant.nowPlayingFile.getTitle());
         }
-
-        /*if(Constant.nowPlayingAudio !=null){
-            audioTitle = Constant.nowPlayingAudio.getTitle();
-            audioCategory = Constant.nowPlayingAudio.getCategory();
-        }
-        if(Constant.nowPlayingFile != null){
-            fileTitle = Constant.nowPlayingFile.getTitle();
-        }
-        infoTextView.setText("Audio Title: "+audioTitle+"\n Category:"+audioCategory
-                +"\n File Title:"+fileTitle);
-*/
     }
 
     private void setPausedView(){
@@ -326,6 +314,11 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         toast.show();
     }
 
-
-
+    /*
+    @Override
+    protected void onDestroy() {
+        Log.d(LOG_TAG,"on stop activity");
+        TTSButtonListener.onStopActivity();
+        super.onStop();
+    }*/
 }

@@ -8,4 +8,5 @@ public interface CacheControlCallback {
     void onFileConsumed(String curPtr);
     void onNextFileRequested();
     void onCurrentFileCached();
+    void onEmptyCache();
 }

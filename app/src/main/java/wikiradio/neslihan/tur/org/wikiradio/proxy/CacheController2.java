@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 import com.danikula.videocache.CacheListener;
@@ -59,9 +60,6 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     @Override
     protected void onHandleIntent(Intent intent) {
             Log.d(LOG_TAG,"cache controller is started");
-            //RadioActivity.cacheControlCallback = this;
-            //MusicIntentReceiver.cacheControlCallback = this;
-            //ButtonListener.cacheControlCallback = this;
             AudioFileButtonListener.cacheControlCallback = this;
             TTSButtonListener.cacheControlCallback = this;
             categorySet = Constant.categorySet;
@@ -165,6 +163,21 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     public void onCurrentFileCached() {
         Log.d(LOG_TAG,"on current file cached");
         //continueBackgroundCaching();
+    }
+
+    @Override
+    public void onEmptyCache() {
+        Log.d(LOG_TAG,"onEmptyCache");
+        File dir = new File(context.getExternalCacheDir()+"/video-cache/");
+        if (dir.isDirectory())
+        {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++)
+            {
+                new File(dir, children[i]).delete();
+                Log.d(LOG_TAG,"file is deleted");
+            }
+        }
     }
 
     @Override

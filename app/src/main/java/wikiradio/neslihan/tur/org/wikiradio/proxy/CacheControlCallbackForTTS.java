@@ -8,4 +8,5 @@ public interface CacheControlCallbackForTTS {
     void onFileConsumed(String currPtr);
     void onNextFileRequested();
     void onCurrentFileCached();
+    void onEmptyCache();
 }

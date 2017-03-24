@@ -39,6 +39,11 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     }
 
     @Override
+    public void onEmptyCache() {
+
+    }
+
+    @Override
     public void onBackgroundCachingIsDone(AudioFile audioFile) {
 
     }
