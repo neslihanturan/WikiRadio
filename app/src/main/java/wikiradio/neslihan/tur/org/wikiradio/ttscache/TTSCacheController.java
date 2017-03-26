@@ -37,7 +37,6 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     private Context context;
     private TTSFile candidateFile;
     private static TTSFile selectedFile;
-    public static TTSCacheStatusCallback ttsCacheStatusCallback;
 
 
     @Nullable

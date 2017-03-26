@@ -12,9 +12,7 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallbackForTTS;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheStatusCallback;
 
 /**
  * Created by nesli on 28.02.2017.
