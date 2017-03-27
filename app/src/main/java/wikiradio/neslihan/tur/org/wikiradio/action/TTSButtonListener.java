@@ -52,6 +52,7 @@ public class TTSButtonListener{
             Log.d(LOG_TAG,"selectedTTSFile == null");
             isActionWaits = true;
             waitingContext = context;
+            MediaPlayerController.pause(); // bunu test etmedin
             RadioActivity.waitAnimation();
         }else {
             FileDescriptor fileDescriptor = selectedTTSFile.getFileDescriptor();
@@ -89,6 +90,7 @@ public class TTSButtonListener{
                 //RadioActivity.replaceToast("operate waiting audio");
                 Log.d(LOG_TAG,"onNewFileCached");
                 isActionWaits = false;
+                RadioActivity.dismissWaitAnimation();
                 nextSong(waitingContext);
             }
         } catch (IOException e) {

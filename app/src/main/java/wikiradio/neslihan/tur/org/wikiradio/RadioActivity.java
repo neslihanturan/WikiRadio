@@ -1,4 +1,5 @@
 package wikiradio.neslihan.tur.org.wikiradio;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private FloatingActionButton nextButton;
     private FloatingActionButton fastForwardButton;
     private FloatingActionButton rewindButton;
+    private static ProgressDialog waitingDialog;
 
     private static SeekBar seekBar;
     private TextView infoTextView;
@@ -56,7 +59,6 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private int prevPosition;
     //public static AudioFile nowPlayingAudio;
     public static Context context;
-    private boolean isActionWaits;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,6 +100,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         fastForwardButton = (FloatingActionButton)findViewById(R.id.forwardButton);
         rewindButton = (FloatingActionButton)findViewById(R.id.rewindButton);
         secondsTextView = (TextView)findViewById(R.id.secondTextView);
+        waitingDialog = new ProgressDialog(RadioActivity.this);
 
         seekBar = (SeekBar) findViewById(R.id.seekBar);
         infoTextView = (TextView) findViewById(R.id.textView);
@@ -307,8 +310,13 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     }
 
     public static void waitAnimation(){
-        //replaceToast("Waiting");
-        
+        waitingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        waitingDialog.setMessage("Loading. Please wait...");
+        waitingDialog.show();
+    }
+
+    public static void dismissWaitAnimation(){
+        waitingDialog.dismiss();
     }
 
     public static void replaceToast(String message) {

@@ -138,7 +138,7 @@
         android:layout_margin="16dp" />
     <View
         android:id="@+id/dummy4"
-        android:layout_width="24dp"
+        android:layout_width="match_parent"
         android:layout_height="24dp"
         app:layout_anchor="@id/seekBar"
         app:layout_anchorGravity="bottom|end" />
@@ -149,7 +149,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="96dp"
         android:text="Seconds:"
-        app:layout_anchor="@id/viewA"
+        app:layout_anchor="@id/dummy4"
         app:layout_anchorGravity="bottom|end"/>
+
 
 </android.support.design.widget.CoordinatorLayout>
