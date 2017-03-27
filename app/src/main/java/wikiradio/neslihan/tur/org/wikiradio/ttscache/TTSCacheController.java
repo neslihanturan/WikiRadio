@@ -18,13 +18,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.action.AudioFileButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.action.TTSButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.SummaryCallback;
 import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallbackForTTS;
 
 /**
  * Created by nesli on 15.02.2017.
@@ -87,10 +85,9 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
         }
 
         String destinationFileName = Environment.getExternalStorageDirectory().getPath() + "/ttscache/" +ttsFile.getTitle();
-        //context.getExternalCacheDir()+"/tts-cache/"+ttsFile.getTitle();
         String textToConvert = ttsFile.getExtract();
         myHashRender.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, textToConvert);
-        ttobj.synthesizeToFile(textToConvert, myHashRender, destinationFileName);
+        ttobj.synthesizeToFile(textToConvert, myHashRender, destinationFileName); //this process is asyncronous
         ttsFile.setFileName(destinationFileName);
         candidateFile = ttsFile;
         Log.d(LOG_TAG,"onSuccess Summary2" + candidateFile.getFileName());
@@ -121,7 +118,7 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     }
 
     @Override
-    public void onFileConsumed(String curPtr) {
+    public void onFileConsumed(TTSFile curPtr) {
         //RadioActivity.replaceToast("TTS-onFileConsumed");
         Log.d(LOG_TAG,"onFileConsumed");
         //cachedFiles.contains(curPtr)
@@ -130,11 +127,11 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
             cachedFiles.remove(selectedFile);
         }
 
-        File fdelete = new File(curPtr);
+        File fdelete = new File(curPtr.getFileName());
         if (fdelete.delete()) {
-            Log.d(LOG_TAG,"onfileconsumedfile Deleted :"+curPtr);
+            Log.d(LOG_TAG,"onfileconsumedfile Deleted :"+curPtr.getFileName());
         } else {
-            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :"+curPtr);
+            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :"+curPtr.getFileName());
         }
     }
 
@@ -143,11 +140,6 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
         //RadioActivity.replaceToast("TTS-onNextFileRequested");
         Log.d(LOG_TAG,"onNextFileRequested");
         selectNextFile();
-    }
-
-    @Override
-    public void onCurrentFileCached() {
-        Log.d(LOG_TAG,"onCurrentFileCached");
     }
 
     @Override

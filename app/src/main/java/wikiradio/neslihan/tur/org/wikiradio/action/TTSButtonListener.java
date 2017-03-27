@@ -11,8 +11,8 @@ import wikiradio.neslihan.tur.org.wikiradio.RadioActivity;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.model.TTSFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallbackForTTS;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.CacheControlCallbackForTTS;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.WikipediaSummaryCacheController;
 
 /**
  * Created by nesli on 28.02.2017.
@@ -39,14 +39,14 @@ public class TTSButtonListener{
         }
         else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
             Log.d(LOG_TAG,"a file is playing: "+Constant.nowPlayingFile.getFileName());
-            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile.getFileName());
+            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile);
         }
 
         //request next file
         cacheControlCallbackForTTS.onNextFileRequested();
 
 
-        TTSFile selectedTTSFile = TTSCacheController.getCurrentFile();
+        TTSFile selectedTTSFile = WikipediaSummaryCacheController.getInstance(context).getCurrentTTSFile();
 
         if(selectedTTSFile==null){
             Log.d(LOG_TAG,"selectedTTSFile == null");
@@ -70,7 +70,7 @@ public class TTSButtonListener{
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{
-            MediaPlayerController.playOrPause(TTSCacheController.getCurrentFile().getFileDescriptor());
+            MediaPlayerController.playOrPause(WikipediaSummaryCacheController.getInstance(context).getCurrentTTSFile().getFileDescriptor());
         }
     }
 

@@ -13,9 +13,8 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallbackForTTS;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.CacheControlCallbackForTTS;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 
 /**
  * Created by nesli on 28.02.2017.
@@ -49,7 +48,7 @@ public class AudioFileButtonListener {
         }
         else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
             Log.d(LOG_TAG,"a file is playing");
-            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile.getFileName());
+            cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile);
         }
 
         Log.d(LOG_TAG,"call onNextFileRequested()");

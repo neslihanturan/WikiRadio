@@ -28,19 +28,27 @@ public class Constant {
     public static boolean isAudioPlaying = true; //false means a tts file is playing
 
     public interface SEEKBAR {
-        public static int STOP_SEEKBAR = -1;
+        int STOP_SEEKBAR = -1;
     }
 
     public interface ISPLAYING{
-        public static String PLAYING = "state.playing";
-        public static String PAUSED = "state.paused";
+        String PLAYING = "state.playing";
+        String PAUSED = "state.paused";
     }
 
     public interface ACTION {
-        public static String MAIN_ACTION = "action.activity";
-        public static String PLAY_ACTION = "action.play";
-        public static String NEXT_ACTION = "action.next";
-        public static String FORWARD_ACTION = "action.skip_forward";
-        public static String REWIND_ACTION = "action.skip_backwards ";
+        String MAIN_ACTION = "action.activity";
+        String PLAY_ACTION = "action.play";
+        String NEXT_ACTION = "action.next";
+        String FORWARD_ACTION = "action.skip_forward";
+        String REWIND_ACTION = "action.skip_backwards ";
+    }
+
+
+    public interface CACHE {
+        int TTS_CACHE_LIMIT = 4;
+        int COMMONS_CACHE_LIMIT = 4;
+        String TTS_CACHE_DIR = "ttscache";
+        String AUDIO_CACHE_DIR = "video-cache";
     }
 }

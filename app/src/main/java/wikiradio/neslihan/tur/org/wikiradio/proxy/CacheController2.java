@@ -59,13 +59,14 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     protected void onHandleIntent(Intent intent) {
-            Log.d(LOG_TAG,"cache controller is started");
+            Log.d(LOG_TAG,"cache controller is started on thread"+Thread.currentThread());
             AudioFileButtonListener.cacheControlCallback = this;
             TTSButtonListener.cacheControlCallback = this;
             categorySet = Constant.categorySet;
             context = this;
             proxy = App.getProxy(this);
             cachingFileHashMap = new HashMap<>();
+
             cacheFilesOnBackground();
     }
 
@@ -103,7 +104,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
-        Log.d(LOG_TAG,"on audio file url success");
+        Log.d(LOG_TAG,"on audio file url success thread:"+Thread.currentThread());
         audioFile.setFullyCached(false);
         new BackgroundTask().execute(audioFile,(CacheListener)this,(BackgroundCachingIsDone)this);
 
@@ -157,12 +158,6 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
             currPtr = null;
 
         }
-    }
-
-    @Override
-    public void onCurrentFileCached() {
-        Log.d(LOG_TAG,"on current file cached");
-        //continueBackgroundCaching();
     }
 
     @Override

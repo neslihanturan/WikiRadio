@@ -32,6 +32,7 @@ import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
+import wikiradio.neslihan.tur.org.wikiradio.ttscache.WikipediaSummaryCacheController;
 
 
 public class RadioActivity extends AppCompatActivity implements MediaPlayerCallback, CacheListener,AudioInfoCallbak{
@@ -79,6 +80,9 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        WikipediaSummaryCacheController.getInstance(this).startToCaching();
+
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegateActivity = this;
         context = this;
@@ -304,6 +308,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
     public static void waitAnimation(){
         //replaceToast("Waiting");
+        
     }
 
     public static void replaceToast(String message) {
