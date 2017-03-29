@@ -108,7 +108,7 @@ public class CommonsCacheController extends AbstractCacheController implements B
     }
 
     @Override
-    public void onFileConsumed(String curPtr) {
+    public void onFileConsumed(AudioFile currPtr) {
         File fdelete;
 
         if(proxy.isCached(currPtr.getAudioUrl())){

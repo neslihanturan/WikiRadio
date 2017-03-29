@@ -120,7 +120,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     }
 
     @Override
-    public void onFileConsumed(String curPtr) {
+    public void onFileConsumed(AudioFile curPtr) {
         // Do nothing
     }
 
