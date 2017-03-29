@@ -53,8 +53,8 @@ public class SplashActivity extends Activity implements CategoryListCallback{
     }
     public void startOrganizerService(){
         Log.d(LOG_TAG,"service is started");
-        Intent intent = new Intent(SplashActivity.this, CacheController2.class);
-        this.startService(intent);
+        //Intent intent = new Intent(SplashActivity.this, CacheController2.class);
+        //this.startService(intent);
         //Intent intent2 = new Intent(SplashActivity.this, TTSCacheController.class);
         //this.startService(intent2);
         

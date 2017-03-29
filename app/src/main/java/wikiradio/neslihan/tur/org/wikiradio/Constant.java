@@ -26,6 +26,7 @@ public class Constant {
     public static AudioFile nowPlayingAudio;
     public static TTSFile nowPlayingFile;
     public static boolean isAudioPlaying = true; //false means a tts file is playing
+    public static boolean isPlaying = false;
 
     public interface SEEKBAR {
         int STOP_SEEKBAR = -1;

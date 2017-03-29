@@ -13,6 +13,7 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CommonsCacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.CacheControlCallbackForTTS;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
 
@@ -31,7 +32,7 @@ public class AudioFileButtonListener {
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{
-            MediaPlayerController.playOrPause(CacheController2.getCurrentURL());
+            MediaPlayerController.playOrPause(CommonsCacheController.getInstance(context).getCurrentProxyURL());
         }
     }
 
@@ -53,7 +54,7 @@ public class AudioFileButtonListener {
 
         Log.d(LOG_TAG,"call onNextFileRequested()");
         cacheControlCallback.onNextFileRequested();
-        AudioFile newAudioFile = CacheController2.getCurrentAudio();
+        AudioFile newAudioFile = CommonsCacheController.getInstance(context).getCurrentAudioFile();
         if(newAudioFile==null){
             Log.d(LOG_TAG,"newAudioFile is null");
             DataUtils.getRandomAudio(Constant.categorySet,(AudioInfoCallbak) context);

@@ -39,10 +39,23 @@ public class AudioSourceSelector {
         return null;
     }
 
+
     public static void operate(String action, Context context) throws IOException {
+        // TODO: Decrease the complexity of here
         Log.d(LOG_TAG,"operate");
         String audioSourceSelection = selectAudioSource(context);
 
+        if(action.equals(Constant.ACTION.PLAY_ACTION)){
+            if(Constant.isAudioPlaying && Constant.isPlaying){
+                // An audio file is playing and file is playing and user tries to pause it
+                audioFileActions(action, context);
+                return;
+            }else if(!Constant.isAudioPlaying && Constant.isPlaying) {
+                // A tts file is playing and user tries to pause it
+                ttsActions(action, context);
+                return;
+            }
+        }
         if (audioSourceSelection.equals("ONLYCOMMONS")){
             audioFileActions(action, context);
         }
@@ -59,6 +72,7 @@ public class AudioSourceSelector {
                 Log.d(LOG_TAG,"ttsActions selected");
             }
         }
+
     }
 
     private static void audioFileActions(String action, Context context) throws IOException {

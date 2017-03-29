@@ -5,6 +5,8 @@ import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.IOException;
 
+import wikiradio.neslihan.tur.org.wikiradio.Constant;
+
 /**
  * Created by nesli on 24.12.2016.
  */
@@ -40,6 +42,7 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
+            Constant.isPlaying = true;
             if(delegateActivity!=null)
                 delegateActivity.onMediaPlayerPlaying();
             if(delegateService!=null)
@@ -55,6 +58,7 @@ public class MediaPlayerController {
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
+            Constant.isPlaying = true;
             if(delegateActivity!=null)
                 delegateActivity.onMediaPlayerPlaying();
             if(delegateService!=null)
@@ -71,6 +75,7 @@ public class MediaPlayerController {
         if(SingleMediaPlayer.getInstance().getState() > MediaPlayerState.STATE_PREPARED || SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_PLAYBACK_COMPLETED){
             if(SingleMediaPlayer.getInstance().isPlaying()){
                 SingleMediaPlayer.getInstance().pauseMediaPlayer();
+                Constant.isPlaying = false;
                 if(delegateActivity!=null)
                     delegateActivity.onMediaPlayerPaused();
                 if(delegateService!=null)

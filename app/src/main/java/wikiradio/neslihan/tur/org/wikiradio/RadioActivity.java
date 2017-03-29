@@ -33,6 +33,7 @@ import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
+import wikiradio.neslihan.tur.org.wikiradio.proxy.CommonsCacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.WikipediaSummaryCacheController;
 
@@ -84,6 +85,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         super.onCreate(savedInstanceState);
 
         WikipediaSummaryCacheController.getInstance(this).startToCaching();
+        CommonsCacheController.getInstance(this).startToCaching();
 
         setContentView(R.layout.activity_radio);
         MediaPlayerController.delegateActivity = this;
@@ -239,7 +241,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        TTSCacheController.destroyTTS();
+        WikipediaSummaryCacheController.getInstance(context).destroyTTS();
         Log.d(LOG_TAG,"on stop activity");
         TTSButtonListener.onStopActivity();
 
