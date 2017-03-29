@@ -26,7 +26,7 @@ public class NotificationService extends Service implements AudioInfoCallbak, Me
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         //return super.onStartCommand(intent, flags, startId);
-        Log.d(LOG_TAG,"service is starting");
+        Log.i(LOG_TAG,"service is starting");
         context = this;
         MediaPlayerController.delegateService = this;
         radioNotification = new RadioNotification(this, Constant.ISPLAYING.PLAYING);

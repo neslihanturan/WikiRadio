@@ -38,7 +38,7 @@ public class MediaPlayerController {
         }
     }
     public static void play(String songurl) throws IOException {
-        Log.d(LOG_TAG," play(String songurl)");
+        Log.i(LOG_TAG," play(String songurl)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
@@ -54,7 +54,7 @@ public class MediaPlayerController {
         }
     }
     public static void play(FileDescriptor fileDescriptor) throws IOException {
-        Log.d(LOG_TAG," play(FileDescriptor fileDescriptor)");
+        Log.i(LOG_TAG," play(FileDescriptor fileDescriptor)");
         // STATE_PREPARED | STATE_STARTED |  STATE_PAUSED
         if(SingleMediaPlayer.getInstance().getState() >= MediaPlayerState.STATE_PREPARED){
             SingleMediaPlayer.getInstance().playMediaPlayer();
@@ -70,7 +70,7 @@ public class MediaPlayerController {
         }
     }
     public static void pause() throws IOException {
-        Log.d(LOG_TAG," pause()");
+        Log.i(LOG_TAG," pause()");
         //STATE_STARTED | STATE_PAUSED | STATE_PLAYBACK_COMPLETED
         if(SingleMediaPlayer.getInstance().getState() > MediaPlayerState.STATE_PREPARED || SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_PLAYBACK_COMPLETED){
             if(SingleMediaPlayer.getInstance().isPlaying()){
@@ -84,7 +84,7 @@ public class MediaPlayerController {
         }
     }
     public static void changeSong(String songUrl) throws IOException{
-        Log.d(LOG_TAG," changeSong(String songUrl)");
+        Log.i(LOG_TAG," changeSong(String songUrl)");
         // STATE_IDLE
         if(SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_IDLE){
             SingleMediaPlayer.getInstance().setDataMediaPlayer(songUrl);
@@ -94,7 +94,7 @@ public class MediaPlayerController {
         }
     }
     public static void changeSong(FileDescriptor fileDescriptor) throws IOException{
-        Log.d(LOG_TAG," changeSong(FileDescriptor fileDescriptor)");
+        Log.i(LOG_TAG," changeSong(FileDescriptor fileDescriptor)");
         // STATE_IDLE
         if(SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_IDLE){
             SingleMediaPlayer.getInstance().setDataMediaPlayer(fileDescriptor);
@@ -104,12 +104,12 @@ public class MediaPlayerController {
         }
     }
     public static void cleanMediaPlayer(){
-        Log.d(LOG_TAG," cleanMediaPlayer()");
+        Log.i(LOG_TAG," cleanMediaPlayer()");
         // Legal for all states
         SingleMediaPlayer.getInstance().resetMediaPlayer();
     }
     public static void restartMediaPlayer(String songUrl) throws IOException {
-        Log.d(LOG_TAG," restartMediaPlayer(String songUrl)");
+        Log.i(LOG_TAG," restartMediaPlayer(String songUrl)");
         // STATE_STOPPED | STATE_PLAYBACK_COMPLETED |  STATE_ERROR
         if(SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_IDLE ){
             SingleMediaPlayer.getInstance().setDataMediaPlayer(songUrl);
@@ -117,7 +117,7 @@ public class MediaPlayerController {
         }
     }
     public static void restartMediaPlayer(FileDescriptor fileDescriptor) throws IOException {
-        Log.d(LOG_TAG," restartMediaPlayerFileDescriptor fileDescriptor)");
+        Log.i(LOG_TAG," restartMediaPlayerFileDescriptor fileDescriptor)");
         // STATE_STOPPED | STATE_PLAYBACK_COMPLETED |  STATE_ERROR
         if(SingleMediaPlayer.getInstance().getState() == MediaPlayerState.STATE_IDLE ){
             SingleMediaPlayer.getInstance().setDataMediaPlayer(fileDescriptor);
@@ -125,7 +125,7 @@ public class MediaPlayerController {
         }
     }
     public static void seekTo(int seekPosition){
-        Log.d(LOG_TAG,"seek to: "+ seekPosition);
+        Log.i(LOG_TAG,"seek to: "+ seekPosition);
         SingleMediaPlayer.getInstance().seekTo(seekPosition);
     }
     public static int getCurrentPosition(){
@@ -151,7 +151,7 @@ public class MediaPlayerController {
         }
     }
     public static void handlePendingAction(String songUrl) throws IOException {
-        Log.d(LOG_TAG," handlePendingAction(String songUrl)");
+        Log.i(LOG_TAG," handlePendingAction(String songUrl)");
         switch (pendingAction){
             case "NONE":
                 break;
@@ -162,7 +162,7 @@ public class MediaPlayerController {
         }
     }
     public static void handlePendingAction(FileDescriptor fileDescriptor) throws IOException {
-        Log.d(LOG_TAG," handlePendingAction(FileDescriptor fileDescriptor)");
+        Log.i(LOG_TAG," handlePendingAction(FileDescriptor fileDescriptor)");
         switch (pendingAction){
             case "NONE":
                 break;

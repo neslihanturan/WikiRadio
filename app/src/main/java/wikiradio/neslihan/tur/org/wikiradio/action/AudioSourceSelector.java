@@ -18,22 +18,22 @@ public class AudioSourceSelector {
     private static String LOG_TAG = AudioSourceSelector.class.getName();
 
     private static String selectAudioSource(Context context){
-        Log.d(LOG_TAG,"selectAudioSource");
+        Log.i(LOG_TAG,"selectAudioSource");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         boolean onlyCommons = preferences.getBoolean("only_commons",false);
         boolean onlyTTS = preferences.getBoolean("only_tts",false);
         boolean both = preferences.getBoolean("both",true);
 
         if (onlyCommons){
-            Log.d(LOG_TAG,"ONLYCOMMONS");
+            Log.i(LOG_TAG,"ONLYCOMMONS");
             return "ONLYCOMMONS";
         }
         else if (onlyTTS){
-            Log.d(LOG_TAG,"ONLYTTS");
+            Log.i(LOG_TAG,"ONLYTTS");
             return "ONLYTTS";
         }
         else if (both){
-            Log.d(LOG_TAG,"BOTH");
+            Log.i(LOG_TAG,"BOTH");
             return "BOTH";
         }
         return null;
@@ -42,7 +42,7 @@ public class AudioSourceSelector {
 
     public static void operate(String action, Context context) throws IOException {
         // TODO: Decrease the complexity of here
-        Log.d(LOG_TAG,"operate");
+        Log.i(LOG_TAG,"operate");
         String audioSourceSelection = selectAudioSource(context);
 
         if(action.equals(Constant.ACTION.PLAY_ACTION)){
@@ -65,18 +65,18 @@ public class AudioSourceSelector {
         else if (audioSourceSelection.equals("BOTH")){
             if (Math.random() < 0.5) {
                 audioFileActions(action, context);
-                Log.d(LOG_TAG,"audioFileActions selected");
+                Log.i(LOG_TAG,"audioFileActions selected");
             }
             else {
                 ttsActions(action, context);
-                Log.d(LOG_TAG,"ttsActions selected");
+                Log.i(LOG_TAG,"ttsActions selected");
             }
         }
 
     }
 
     private static void audioFileActions(String action, Context context) throws IOException {
-        Log.d(LOG_TAG,"audioFileActions");
+        Log.i(LOG_TAG,"audioFileActions");
         if(action.equals(Constant.ACTION.NEXT_ACTION)){
             AudioFileButtonListener.nextSong(context);
         }
@@ -92,7 +92,7 @@ public class AudioSourceSelector {
     }
 
     private static void ttsActions(String action, Context context) throws IOException {
-        Log.d(LOG_TAG,"ttsActions");
+        Log.i(LOG_TAG,"ttsActions");
         if(action.equals(Constant.ACTION.NEXT_ACTION)){
             TTSButtonListener.nextSong(context);
         }

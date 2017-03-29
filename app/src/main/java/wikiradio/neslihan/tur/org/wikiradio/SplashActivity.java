@@ -14,9 +14,6 @@ import wikiradio.neslihan.tur.org.wikiradio.data.DataUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.FileUtils;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.CategoryListCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.App;
-import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheController2;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.WikipediaSummaryCacheController;
 
 /**
  * Created by nesli on 09.01.2017.
@@ -52,7 +49,7 @@ public class SplashActivity extends Activity implements CategoryListCallback{
         finish();
     }
     public void startOrganizerService(){
-        Log.d(LOG_TAG,"service is started");
+        Log.i(LOG_TAG,"service is started");
         //Intent intent = new Intent(SplashActivity.this, CacheController2.class);
         //this.startService(intent);
         //Intent intent2 = new Intent(SplashActivity.this, TTSCacheController.class);

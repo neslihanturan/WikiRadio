@@ -28,17 +28,17 @@ public class TTSButtonListener{
 
 
     public static void nextSong(Context context) throws IOException {
-        Log.d(LOG_TAG,"nextSong");
+        Log.i(LOG_TAG,"nextSong");
         RadioActivity.unregisterCacheListener();
 
 
         //waste previously playing files, it can be an audio or TTS file
         if(Constant.isAudioPlaying && Constant.nowPlayingAudio != null){
-            Log.d(LOG_TAG,"an audio is playing");
+            Log.i(LOG_TAG,"an audio is playing");
             cacheControlCallback.onFileConsumed(Constant.nowPlayingAudio.getAudioUrl());
         }
         else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
-            Log.d(LOG_TAG,"a file is playing: "+Constant.nowPlayingFile.getFileName());
+            Log.i(LOG_TAG,"a file is playing: "+Constant.nowPlayingFile.getFileName());
             cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile);
         }
 
@@ -49,7 +49,7 @@ public class TTSButtonListener{
         TTSFile selectedTTSFile = WikipediaSummaryCacheController.getInstance(context).getCurrentTTSFile();
 
         if(selectedTTSFile==null){
-            Log.d(LOG_TAG,"selectedTTSFile == null");
+            Log.i(LOG_TAG,"selectedTTSFile == null");
             isActionWaits = true;
             waitingContext = context;
             MediaPlayerController.pause(); // bunu test etmedin
@@ -57,7 +57,7 @@ public class TTSButtonListener{
         }else {
             FileDescriptor fileDescriptor = selectedTTSFile.getFileDescriptor();
 
-            Log.d(LOG_TAG,"newAudioFile is NOT null");
+            Log.i(LOG_TAG,"newAudioFile is NOT null");
             //newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getAudioUrl()));
             MediaPlayerController.changeSong(fileDescriptor);
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
@@ -67,7 +67,7 @@ public class TTSButtonListener{
     }
 
     public static void playOrPause(Context context) throws IOException{
-        Log.d(LOG_TAG,"playOrPause");
+        Log.i(LOG_TAG,"playOrPause");
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
         }else{
@@ -78,6 +78,7 @@ public class TTSButtonListener{
     private static void playSong(TTSFile ttsFile) throws IOException {
         isActionWaits = false;
         Constant.nowPlayingFile = ttsFile;
+        Constant.nowPlayingAudio = null;
         Constant.isAudioPlaying = false;
         MediaPlayerController.play(ttsFile.getFileDescriptor());
         // TODO:nowPlayingAudio = audioFile;
@@ -88,7 +89,7 @@ public class TTSButtonListener{
         try {
             if(isActionWaits){
                 //RadioActivity.replaceToast("operate waiting audio");
-                Log.d(LOG_TAG,"onNewFileCached");
+                Log.i(LOG_TAG,"onNewFileCached");
                 isActionWaits = false;
                 RadioActivity.dismissWaitAnimation();
                 nextSong(waitingContext);
@@ -100,21 +101,21 @@ public class TTSButtonListener{
     }
 
     public static void seekToForward(){
-        Log.d(LOG_TAG,"seekTo Duration:");
+        Log.i(LOG_TAG,"seekTo Duration:");
         MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()+
                 MediaPlayerController.getDuration()/10);
     }
 
 
     public static void seekToRewind(){
-        Log.d(LOG_TAG,"seekTo Duration:");
+        Log.i(LOG_TAG,"seekTo Duration:");
         MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()-
                 MediaPlayerController.getDuration()/10);
     }
 
     // The structure is weird here. However there is no need to apply this on AudioFileButtonListener too
     public static void onStopActivity(){
-        Log.d(LOG_TAG,"on stop activity");
+        Log.i(LOG_TAG,"on stop activity");
         cacheControlCallback.onEmptyCache();
         cacheControlCallbackForTTS.onEmptyCache();
     }

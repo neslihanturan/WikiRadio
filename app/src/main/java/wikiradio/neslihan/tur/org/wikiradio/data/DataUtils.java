@@ -40,7 +40,7 @@ public class DataUtils {
         Call<MwJsonObject> queryResponse = mwAPIInterface
                                                     .getRelevantCategories(psoffset);
 
-        Log.d(LOG_TAG,"getCategoryList APIİnterface"+mwAPIInterface.toString());
+        Log.i(LOG_TAG,"getCategoryList APIİnterface"+mwAPIInterface.toString());
 
         queryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
@@ -57,20 +57,20 @@ public class DataUtils {
                         return;
                     }
                 }
-                Log.d(LOG_TAG,"getCategoryList method onResponse");
+                Log.i(LOG_TAG,"getCategoryList method onResponse");
                 //ArrayList<String> categoryList = new ArrayList<>();
                 for(MwJsonPrefixsearch ps : response.body().getQuery().getPrefixsearch()){
                     //if(ps.getTitle()!=null){
                         previous.add(ps.getTitle());
                     //}
                 }
-                Log.d(LOG_TAG,"getCategoryList is finishing, RandomCategoryCallback is "+callback);
+                Log.i(LOG_TAG,"getCategoryList is finishing, RandomCategoryCallback is "+callback);
                 callback.onSuccess(previous);
-                Log.d(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onSuccess method has been thrown");
+                Log.i(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onSuccess method has been thrown");
             }
             @Override
             public void onFailure(Call<MwJsonObject> call, Throwable t) {
-                Log.d(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onFailure method has been thrown");
+                Log.i(LOG_TAG,"getCategoryList method is finished, CategoryListCallback.onFailure method has been thrown");
                 callback.onError(CategoryListCallback.class);
             }
         });
@@ -90,12 +90,12 @@ public class DataUtils {
         Call<MwJsonObject> queryResponse = mwAPIInterface
                                             .getRandomAudio(categoryTitle);
 
-        Log.d(LOG_TAG,"getRandomAudio APIİnterface"+mwAPIInterface.toString());
-        Log.d(LOG_TAG,"getRandomAudio called from"+Thread.currentThread());
+        Log.i(LOG_TAG,"getRandomAudio APIİnterface"+mwAPIInterface.toString());
+        Log.i(LOG_TAG,"getRandomAudio called from"+Thread.currentThread());
         queryResponse.enqueue(new Callback<MwJsonObject>() {
             @Override
             public void onResponse(Call<MwJsonObject> call, Response<MwJsonObject> response) {
-                Log.d(LOG_TAG,"getRandomAudio method is on response");
+                Log.i(LOG_TAG,"getRandomAudio method is on response");
                 //case: category empty , this may happens when category is redirected
                 if(response.body().getQuery()==null){
                     getRandomAudio(categorySet, callback); //recursive call to re-randomize
@@ -112,25 +112,25 @@ public class DataUtils {
                     Object[] values = response.body().getQuery().getPages().values().toArray();
                     Object randomValue = values[generator.nextInt(values.length)];
 
-                    Log.d(LOG_TAG,"getRandomAudio selected image info: "+((MwJsonPage)randomValue).getImageinfo()[0].toString());
+                    Log.i(LOG_TAG,"getRandomAudio selected image info: "+((MwJsonPage)randomValue).getImageinfo()[0].toString());
                     audioFile.setAudioUrl(((MwJsonPage)randomValue).getImageinfo()[0].getUrl());
                     audioFile.setTitle(((MwJsonPage)randomValue).getImageinfo()[0].getCanonicaltitle());
                     audioFile.setPageUrl("https://commons.wikimedia.org/wiki/"+audioFile.getTitle());
                     audioFile.setCategory(categoryTitle);
                     audioFile.setSize(((MwJsonPage)randomValue).getImageinfo()[0].getSize());
-                    Log.d(LOG_TAG,"getRandomAudio is finishing, RandomAudioCallback is:" + callback);
+                    Log.i(LOG_TAG,"getRandomAudio is finishing, RandomAudioCallback is:" + callback);
                     callback.onSuccess(audioFile, AudioInfoCallbak.class);    //true means valid category
-                    Log.d(LOG_TAG,"getRandomAudio onSuccess has been thrown, method is finished");
+                    Log.i(LOG_TAG,"getRandomAudio onSuccess has been thrown, method is finished");
                 }
             }
             @Override
             public void onFailure(Call<MwJsonObject> call, Throwable t) {
                 t.printStackTrace();
-                Log.d(LOG_TAG,"getRandomAudio is onFailure");
+                Log.i(LOG_TAG,"getRandomAudio is onFailure");
                 callback.onError(AudioInfoCallbak.class);
             }
         });
-        Log.d(LOG_TAG,"getRandomAudio is returned1");
+        Log.i(LOG_TAG,"getRandomAudio is returned1");
     }
 
     //TODO: add continuation
@@ -138,7 +138,7 @@ public class DataUtils {
         MwAPIInterface mwAPIInterface = ((MwAPIInterface) RetrofitServiceCache.getService(Constant.COMMONS_BASE_URL,
                 Constant.MEDIA_WIKI_API));
         for (final String categoryTitle : categoryList) {
-            Log.d(LOG_TAG,"category list size:"+categoryList.size());
+            Log.i(LOG_TAG,"category list size:"+categoryList.size());
             Call<MwJsonObject> queryResponse = mwAPIInterface
                     .getRandomAudio(categoryTitle);
             queryResponse.enqueue(new Callback<MwJsonObject>() {
@@ -171,7 +171,7 @@ public class DataUtils {
     }
 
     public static void getRandomSummary(final SummaryCallback callback){
-        Log.d(LOG_TAG,"getRandomSummary");
+        Log.i(LOG_TAG,"getRandomSummary");
         RestfulAPIInterface restfulAPIInterface = ((RestfulAPIInterface) RetrofitServiceCache.getService(Constant.EN_WIKIPEDIA_BASE_URL,
                 Constant.REST_API));
         Call<RestfulJsonObject> restfulJsonObjectCall = restfulAPIInterface
@@ -190,19 +190,19 @@ public class DataUtils {
                 TTSFile ttsFile = new TTSFile();
                 ttsFile.setTitle(response.body().getTitle());
                 ttsFile.setPageUrl("http://en.wikipedia.org/wiki/"+ttsFile.getTitle());
-                Log.d(LOG_TAG,"page url of tts "+ttsFile.getPageUrl());
+                Log.i(LOG_TAG,"page url of tts "+ttsFile.getPageUrl());
                 ttsFile.setExtract(response.body().getExtract());
                 ttsFile.setThumbnailSource(response.body().getThumbnail().getSource());
                 ttsFile.setThumbnailWidth(response.body().getThumbnail().getWidth());
                 ttsFile.setThumbnailHeight(response.body().getThumbnail().getHeight());
 
-                Log.d(LOG_TAG,response.body().getTitle() + " url"+response.body().getExtract());
+                Log.i(LOG_TAG,response.body().getTitle() + " url"+response.body().getExtract());
                 callback.onSuccess(ttsFile);
             }
 
             @Override
             public void onFailure(Call<RestfulJsonObject> call, Throwable t) {
-                Log.d(LOG_TAG,"couldnt get data");
+                Log.i(LOG_TAG,"couldnt get data");
                 callback.onError();
             }
         }));

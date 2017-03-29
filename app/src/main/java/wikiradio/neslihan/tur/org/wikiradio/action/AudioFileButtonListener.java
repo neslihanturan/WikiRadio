@@ -27,7 +27,7 @@ public class AudioFileButtonListener {
     public static CacheControlCallbackForTTS cacheControlCallbackForTTS;
 
     public static void playOrPause(Context context) throws IOException {
-        Log.d(LOG_TAG,"playOrPause");
+        Log.i(LOG_TAG,"playOrPause");
         //if(CacheController2.getCurrentURL()==null){
         if(Constant.nowPlayingAudio == null && Constant.nowPlayingFile == null){
             nextSong(context);
@@ -37,29 +37,29 @@ public class AudioFileButtonListener {
     }
 
     public static void nextSong(Context context) throws IOException {
-        Log.d(LOG_TAG,"next song requested");
+        Log.i(LOG_TAG,"next song requested");
         //lock();
         RadioActivity.unregisterCacheListener();
         //TODO: remowe wasted file
         // there is a file that is played previously
 
         if(Constant.isAudioPlaying && Constant.nowPlayingAudio != null){
-            Log.d(LOG_TAG,"an audio is playing");
+            Log.i(LOG_TAG,"an audio is playing");
             cacheControlCallback.onFileConsumed(Constant.nowPlayingAudio.getAudioUrl());
         }
         else if(!Constant.isAudioPlaying && Constant.nowPlayingFile != null){
-            Log.d(LOG_TAG,"a file is playing");
+            Log.i(LOG_TAG,"a file is playing");
             cacheControlCallbackForTTS.onFileConsumed(Constant.nowPlayingFile);
         }
 
-        Log.d(LOG_TAG,"call onNextFileRequested()");
+        Log.i(LOG_TAG,"call onNextFileRequested()");
         cacheControlCallback.onNextFileRequested();
         AudioFile newAudioFile = CommonsCacheController.getInstance(context).getCurrentAudioFile();
         if(newAudioFile==null){
-            Log.d(LOG_TAG,"newAudioFile is null");
+            Log.i(LOG_TAG,"newAudioFile is null");
             DataUtils.getRandomAudio(Constant.categorySet,(AudioInfoCallbak) context);
         }else{
-            Log.d(LOG_TAG,"newAudioFile is NOT null");
+            Log.i(LOG_TAG,"newAudioFile is NOT null");
             newAudioFile.setProxyUrl(App.getProxy(context).getProxyUrl(newAudioFile.getAudioUrl()));
             MediaPlayerController.changeSong(newAudioFile.getProxyUrl());
             // TODO:seekBar.setSecondaryProgress(seekBar.getMax());
@@ -69,8 +69,9 @@ public class AudioFileButtonListener {
     }
 
     public static void playSong(AudioFile audioFile) throws IOException{
-        Log.d(LOG_TAG,"playSong");
+        Log.i(LOG_TAG,"playSong");
         Constant.nowPlayingAudio = audioFile;
+        Constant.nowPlayingFile = null;
         Constant.isAudioPlaying = true;
         MediaPlayerController.play(audioFile.getProxyUrl());
         // TODO:nowPlayingAudio = audioFile;
@@ -80,7 +81,7 @@ public class AudioFileButtonListener {
 
     public static void onSuccess(AudioFile audioFile, Context context) {
         try {
-            Log.d(LOG_TAG,"onSuccess Audiofile");
+            Log.i(LOG_TAG,"onSuccess Audiofile");
             //Constant.proxy.registerCacheListener((CacheListener) context, audioFile.getAudioUrl());
             audioFile.setProxyUrl(Constant.proxy.getProxyUrl(audioFile.getAudioUrl()));
             MediaPlayerController.changeSong(audioFile.getProxyUrl());
@@ -91,14 +92,14 @@ public class AudioFileButtonListener {
     }
 
     public static void seekToForward(){
-        Log.d(LOG_TAG,"seekTo Duration:");
+        Log.i(LOG_TAG,"seekTo Duration:");
         MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()+
                 MediaPlayerController.getDuration()/10);
     }
 
 
     public static void seekToRewind(){
-        Log.d(LOG_TAG,"seekTo Duration:");
+        Log.i(LOG_TAG,"seekTo Duration:");
         MediaPlayerController.seekTo(MediaPlayerController.getCurrentPosition()-
                 MediaPlayerController.getDuration()/10);
     }

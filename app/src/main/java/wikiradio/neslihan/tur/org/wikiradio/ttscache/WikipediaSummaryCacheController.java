@@ -45,7 +45,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     }
 
     public static WikipediaSummaryCacheController getInstance(Context context) {
-        Log.d(LOG_TAG," getInstance()");
+        Log.i(LOG_TAG," getInstance()");
         if(INSTANCE == null){
             INSTANCE = new WikipediaSummaryCacheController(context);
         }
@@ -64,12 +64,12 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
             AsyncTask.execute(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(LOG_TAG,"AsyncTask");
+                    Log.i(LOG_TAG,"AsyncTask");
                     ttobj = new TextToSpeech(context, WikipediaSummaryCacheController.this);
                 }
             });
         }else if (cachedFiles.size()< Constant.CACHE.TTS_CACHE_LIMIT){
-            Log.d(LOG_TAG,"cacheFilesOnBackground");
+            Log.i(LOG_TAG,"cacheFilesOnBackground");
             DataUtils.getRandomSummary(this);
         }
     }
@@ -79,7 +79,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void selectNextFile() {
-        Log.d(LOG_TAG,"selectNextFile");
+        Log.i(LOG_TAG,"selectNextFile");
         if(cachedFiles.size()<=0){
             currentFile = null;
         }else{
@@ -103,12 +103,12 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public TTSFile getCurrentTTSFile() {
-            Log.d(LOG_TAG,"getCurrentFile");
+            Log.i(LOG_TAG,"getCurrentFile");
             if(currentFile !=null){
-                Log.d(LOG_TAG,"current file: "+currentFile.getFileName());
+                Log.i(LOG_TAG,"current file: "+currentFile.getFileName());
                 return currentFile;
             }else {
-                Log.d(LOG_TAG,"current file is null");
+                Log.i(LOG_TAG,"current file is null");
                 return null;
             }
     }
@@ -129,26 +129,26 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onFileConsumed(TTSFile currFile) {
-        Log.d(LOG_TAG,"onFileConsumed");
+        Log.i(LOG_TAG,"onFileConsumed");
 
         // Remove from caching files array
         if(currFile!=null && cachedFiles.contains(currFile)){
-            Log.d(LOG_TAG,"onFileConsumed2 removed from array:"+currFile.getFileName());
+            Log.i(LOG_TAG,"onFileConsumed2 removed from array:"+currFile.getFileName());
             cachedFiles.remove(currFile);
         }
 
         // Remove from memory
         File fdelete = new File(currFile.getFileName());
         if (fdelete.delete()) {
-            Log.d(LOG_TAG,"onfileconsumedfile Deleted :"+currFile.getFileName());
+            Log.i(LOG_TAG,"onfileconsumedfile Deleted :"+currFile.getFileName());
         } else {
-            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :"+currFile.getFileName());
+            Log.i(LOG_TAG,"onfileconsumedfile not Deleted :"+currFile.getFileName());
         }
     }
 
     @Override
     public void onNextFileRequested() {
-        Log.d(LOG_TAG,"onNextFileRequested");
+        Log.i(LOG_TAG,"onNextFileRequested");
         selectNextFile();
     }
 
@@ -157,7 +157,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onEmptyCache() {
-        Log.d(LOG_TAG,"onEmptyCache");
+        Log.i(LOG_TAG,"onEmptyCache");
         File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/ttscache/");
         if (dir.isDirectory())
         {
@@ -165,7 +165,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
             for (int i = 0; i < children.length; i++)
             {
                 new File(dir, children[i]).delete();
-                Log.d(LOG_TAG,"file is deleted");
+                Log.i(LOG_TAG,"file is deleted");
             }
         }
     }
@@ -175,7 +175,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onInit(int status) {
-        Log.d(LOG_TAG,"onInit TTS");
+        Log.i(LOG_TAG,"onInit TTS");
         ttobj.setLanguage(Locale.US);
         cacheFilesOnBackground();
     }
@@ -185,7 +185,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onUtteranceCompleted(String utteranceId) {
-        Log.d(LOG_TAG,"onUtteranceCompleted");
+        Log.i(LOG_TAG,"onUtteranceCompleted");
         cachedFiles.add(candidateFile);
         TTSButtonListener.onNewFileCached();
         cacheFilesOnBackground();
@@ -196,7 +196,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onSuccess(TTSFile ttsFile) {
-        Log.d(LOG_TAG,"onSuccess Summary");
+        Log.i(LOG_TAG,"onSuccess Summary");
         HashMap<String, String> myHashRender = new HashMap();
 
         File folder = new File(Environment.getExternalStorageDirectory() + "/"+Constant.CACHE.TTS_CACHE_DIR);
@@ -218,7 +218,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
     * */
     @Override
     public void onError() {
-        Log.d(LOG_TAG,"an error occured");
+        Log.i(LOG_TAG,"an error occured");
         cacheFilesOnBackground();
     }
 
@@ -228,7 +228,7 @@ public class WikipediaSummaryCacheController extends AbstractCacheController imp
 
             ttobj.stop();
             ttobj.shutdown();
-            Log.d(LOG_TAG, "TTS Destroyed");
+            Log.i(LOG_TAG, "TTS Destroyed");
         }
     }
 }

@@ -51,7 +51,7 @@ public class CommonsCacheController extends AbstractCacheController implements B
     }
 
     public static CommonsCacheController getInstance(Context context) {
-        Log.d(LOG_TAG," getInstance()");
+        Log.i(LOG_TAG," getInstance()");
         if(INSTANCE == null){
             INSTANCE = new CommonsCacheController(context);
         }
@@ -66,14 +66,14 @@ public class CommonsCacheController extends AbstractCacheController implements B
     @Override
     public void cacheFilesOnBackground() {
         if (cachingFileHashMap.size()< Constant.CACHE.COMMONS_CACHE_LIMIT){
-            Log.d(LOG_TAG,"caching files on background");
+            Log.i(LOG_TAG,"caching files on background");
             DataUtils.getRandomAudio(categorySet,this);
         }
     }
 
     @Override
     public void selectNextFile() {
-        Log.d(LOG_TAG,"on select next file");
+        Log.i(LOG_TAG,"on select next file");
         if(cachingFileHashMap.size() > 0){
             for(AudioFile audioFile : cachingFileHashMap.values()){
                 currPtr = audioFile;
@@ -117,9 +117,9 @@ public class CommonsCacheController extends AbstractCacheController implements B
             fdelete = new File(context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr.getAudioUrl())+".download");
         }
         if (fdelete.delete()) {
-            Log.d(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr.getAudioUrl()));
+            Log.i(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr.getAudioUrl()));
         } else {
-            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr.getAudioUrl()));
+            Log.i(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr.getAudioUrl()));
         }
         if(cachingFileHashMap.containsKey(currPtr)){
             cachingFileHashMap.remove(currPtr);
@@ -134,13 +134,13 @@ public class CommonsCacheController extends AbstractCacheController implements B
 
     @Override
     public void onNextFileRequested() {
-        Log.d(LOG_TAG,"on next file requested");
+        Log.i(LOG_TAG,"on next file requested");
         selectNextFile();
     }
 
     @Override
     public void onEmptyCache() {
-        Log.d(LOG_TAG,"onEmptyCache");
+        Log.i(LOG_TAG,"onEmptyCache");
         File dir = new File(context.getExternalCacheDir()+"/video-cache/");
         if (dir.isDirectory())
         {
@@ -148,21 +148,21 @@ public class CommonsCacheController extends AbstractCacheController implements B
             for (int i = 0; i < children.length; i++)
             {
                 new File(dir, children[i]).delete();
-                Log.d(LOG_TAG,"file is deleted");
+                Log.i(LOG_TAG,"file is deleted");
             }
         }
     }
 
     @Override
     public void onBackgroundCachingIsDone(AudioFile audioFile) {
-        Log.d(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
+        Log.i(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
         cachingFileHashMap.put(audioFile.getAudioUrl(),audioFile);
         cacheFilesOnBackground();
     }
 
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
-        Log.d(LOG_TAG,"on audio file url success thread:"+Thread.currentThread());
+        Log.i(LOG_TAG,"on audio file url success thread:"+Thread.currentThread());
         audioFile.setFullyCached(false);
         new CommonsCacheController.BackgroundTask().execute(audioFile,(BackgroundCachingIsDone)this);
     }
@@ -183,12 +183,12 @@ public class CommonsCacheController extends AbstractCacheController implements B
 
         @Override
         protected AudioFile doInBackground(Object... params) {
-            Log.d(LOG_TAG,"do in background");
+            Log.i(LOG_TAG,"do in background");
             AudioFile audioFile = (AudioFile) params[0];
             String originUrl = audioFile.getAudioUrl();
             String title = audioFile.getTitle();
             this.cachingIsDoneCallback = (BackgroundCachingIsDone) params[1];
-            Log.d(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
+            Log.i(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
             //should I pass them to thread as parameter?
             //proxy.registerCacheListener(context, originUrl);
             //proxy.unregisterCacheListener(this);
@@ -217,7 +217,7 @@ public class CommonsCacheController extends AbstractCacheController implements B
 
         @Override
         protected void onPostExecute(AudioFile result) {
-            Log.d(LOG_TAG,"on file is cached");
+            Log.i(LOG_TAG,"on file is cached");
             cachingIsDoneCallback.onBackgroundCachingIsDone(result);
             super.onPostExecute(result);
         }

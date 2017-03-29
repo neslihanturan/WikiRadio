@@ -43,7 +43,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
     }
     public void prepareReport(boolean detailledMode){
         this.detailledMode = detailledMode;
-        Log.d(LOG_TAG,"Report is preparing, please wait");
+        Log.i(LOG_TAG,"Report is preparing, please wait");
         DataUtils.getCategoryList(new HashSet<String>(),"",this);
     }
 
@@ -67,7 +67,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
                 end=!end;
                 callback.onSuccess(AllAudioCompleted.class);
             }
-            //Log.d(LOG_TAG,"valid categories:"+validCategories.size()+", invalid categories:"+invalidCategoryCounter+", total categories:"+numberOfAllCategories);
+            //Log.i(LOG_TAG,"valid categories:"+validCategories.size()+", invalid categories:"+invalidCategoryCounter+", total categories:"+numberOfAllCategories);
         }
     }
 
@@ -77,12 +77,12 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
      */
     @Override
     public void onSuccess(HashSet<String> categoryList) {
-        Log.d(LOG_TAG,"onSuccess");
+        Log.i(LOG_TAG,"onSuccess");
         /*for (String s : categoryList){
-            Log.d(LOG_TAG,"all categories"+s);
+            Log.i(LOG_TAG,"all categories"+s);
         }*/
         numberOfAllCategories = categoryList.size();
-        Log.d(LOG_TAG,categoryList.size()+"");
+        Log.i(LOG_TAG,categoryList.size()+"");
         DataUtils.getAllAudioFiles(categoryList,this);
     }
 
@@ -94,7 +94,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
     @Override
     public void onSuccess(Class sender) {
         Collections.sort(sizesOfAudios);
-        Log.d(LOG_TAG,"report: \n" +
+        Log.i(LOG_TAG,"report: \n" +
                 "audio file counter:" +audioFileCounter+"\n" +
                 "size of sizesOfAudios set:" + sizesOfAudios.size()+"\n" +
                 "percentile 80:"+ sizesOfAudios.get((int) sizesOfAudios.size()/100 * 80)+"\n" +
@@ -108,7 +108,7 @@ public class Measurement implements CategoryListCallback,AllAudioCompleted, Audi
     }
     private void displayCategoryAudioMap(){
         for (String category: validCategories.keySet()){
-            Log.d(LOG_TAG,"category:"+category+" has "+validCategories.get(category)+" number of audios");
+            Log.i(LOG_TAG,"category:"+category+" has "+validCategories.get(category)+" number of audios");
         }
     }
 

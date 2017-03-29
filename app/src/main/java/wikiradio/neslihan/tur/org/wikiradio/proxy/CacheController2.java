@@ -59,7 +59,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     protected void onHandleIntent(Intent intent) {
-            Log.d(LOG_TAG,"cache controller is started on thread"+Thread.currentThread());
+            Log.i(LOG_TAG,"cache controller is started on thread"+Thread.currentThread());
             AudioFileButtonListener.cacheControlCallback = this;
             TTSButtonListener.cacheControlCallback = this;
             categorySet = Constant.categorySet;
@@ -72,7 +72,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     private void cacheFilesOnBackground(){
         if (expectedSize<4){
-            Log.d(LOG_TAG,"caching files on background");
+            Log.i(LOG_TAG,"caching files on background");
             DataUtils.getRandomAudio(categorySet,this);
         }
     }
@@ -96,7 +96,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
-        //Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
+        //Log.i(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
         //if(percentsAvailable == 100){
             //cachingFileHashMap.get(url).setFullyCached(true);
         //}
@@ -104,7 +104,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onSuccess(AudioFile audioFile, Class sender) {
-        Log.d(LOG_TAG,"on audio file url success thread:"+Thread.currentThread());
+        Log.i(LOG_TAG,"on audio file url success thread:"+Thread.currentThread());
         audioFile.setFullyCached(false);
         new BackgroundTask().execute(audioFile,(CacheListener)this,(BackgroundCachingIsDone)this);
 
@@ -118,7 +118,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     @Override
     public void onFileConsumed(String currPtr) {
         expectedSize--;
-        //Log.d(LOG_TAG,"onfileconsumed title:"+cachingFileHashMap.get(currPtr).getTitle());
+        //Log.i(LOG_TAG,"onfileconsumed title:"+cachingFileHashMap.get(currPtr).getTitle());
 
         File fdelete;
 
@@ -128,9 +128,9 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
             fdelete = new File(context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr)+".download");
         }
         if (fdelete.delete()) {
-            Log.d(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
+            Log.i(LOG_TAG,"onfileconsumedfile Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
         } else {
-            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
+            Log.i(LOG_TAG,"onfileconsumedfile not Deleted :" + context.getExternalCacheDir()+"/video-cache/"+fileNameGenerator.generate(currPtr));
         }
         if(cachingFileHashMap.containsKey(currPtr)){
             cachingFileHashMap.remove(currPtr);
@@ -142,13 +142,13 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onNextFileRequested() {
-        Log.d(LOG_TAG,"on next file requested");
+        Log.i(LOG_TAG,"on next file requested");
         //stopBackgroundCaching();
         selectNextFile();
     }
 
     private void selectNextFile(){
-        Log.d(LOG_TAG,"on select next file");
+        Log.i(LOG_TAG,"on select next file");
         if(cachingFileHashMap.size() > 0){
             for(AudioFile audioFile : cachingFileHashMap.values()){
                 currPtr = audioFile.getAudioUrl();
@@ -162,7 +162,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
     @Override
     public void onEmptyCache() {
-        Log.d(LOG_TAG,"onEmptyCache");
+        Log.i(LOG_TAG,"onEmptyCache");
         File dir = new File(context.getExternalCacheDir()+"/video-cache/");
         if (dir.isDirectory())
         {
@@ -170,7 +170,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
             for (int i = 0; i < children.length; i++)
             {
                 new File(dir, children[i]).delete();
-                Log.d(LOG_TAG,"file is deleted");
+                Log.i(LOG_TAG,"file is deleted");
             }
         }
     }
@@ -178,7 +178,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
     @Override
     public void onBackgroundCachingIsDone(AudioFile audioFile) {
         expectedSize++;
-        Log.d(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
+        Log.i(LOG_TAG,"onBackgroundCachingIsDone started audiofile added to cache"+audioFile.getTitle());
         cachingFileHashMap.put(audioFile.getAudioUrl(),audioFile);
         cacheFilesOnBackground();
     }
@@ -194,13 +194,13 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
         @Override
         protected AudioFile doInBackground(Object... params) {
-            Log.d(LOG_TAG,"do in background");
+            Log.i(LOG_TAG,"do in background");
             AudioFile audioFile = (AudioFile) params[0];
             String originUrl = audioFile.getAudioUrl();
             String title = audioFile.getTitle();
             CacheListener context = (CacheListener) params[1];
             this.cachingIsDoneCallback = (BackgroundCachingIsDone) params[2];
-            Log.d(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
+            Log.i(LOG_TAG,"kickstarted"+" thread is:"+Thread.currentThread()+" title is:"+title);
             //should I pass them to thread as parameter?
             //proxy.registerCacheListener(context, originUrl);
             //proxy.unregisterCacheListener(this);
@@ -229,7 +229,7 @@ public class CacheController2 extends IntentService implements AudioInfoCallbak,
 
         @Override
         protected void onPostExecute(AudioFile result) {
-            Log.d(LOG_TAG,"on file is cached");
+            Log.i(LOG_TAG,"on file is cached");
             cachingIsDoneCallback.onBackgroundCachingIsDone(result);
             super.onPostExecute(result);
         }

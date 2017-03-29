@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +28,10 @@ import wikiradio.neslihan.tur.org.wikiradio.action.TTSButtonListener;
 import wikiradio.neslihan.tur.org.wikiradio.data.callback.AudioInfoCallbak;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerCallback;
 import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.MediaPlayerController;
-import wikiradio.neslihan.tur.org.wikiradio.mediaplayer.SingleMediaPlayer;
 import wikiradio.neslihan.tur.org.wikiradio.model.AudioFile;
 import wikiradio.neslihan.tur.org.wikiradio.notification.NotificationService;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CacheControlCallback;
 import wikiradio.neslihan.tur.org.wikiradio.proxy.CommonsCacheController;
-import wikiradio.neslihan.tur.org.wikiradio.ttscache.TTSCacheController;
 import wikiradio.neslihan.tur.org.wikiradio.ttscache.WikipediaSummaryCacheController;
 
 
@@ -91,7 +88,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
         MediaPlayerController.delegateActivity = this;
         context = this;
         startService(new Intent(RadioActivity.this, NotificationService.class));
-        Log.d(LOG_TAG,"created on thread:"+Thread.currentThread());
+        Log.i(LOG_TAG,"created on thread:"+Thread.currentThread());
         initViews();
         setListeners();
     }
@@ -114,7 +111,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    Log.d(LOG_TAG,"playButton.OnClickListener");
+                    Log.i(LOG_TAG,"playButton.OnClickListener");
                     lock();
                     AudioSourceSelector.operate(Constant.ACTION.PLAY_ACTION,context);
                 } catch (IOException e) {
@@ -126,7 +123,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             @Override
             public void onClick(View v) {
                 try {
-                    Log.d(LOG_TAG,"nextButton.OnClickListener");
+                    Log.i(LOG_TAG,"nextButton.OnClickListener");
                     lock();
                     AudioSourceSelector.operate(Constant.ACTION.NEXT_ACTION,context);
                 } catch (IOException e) {
@@ -159,8 +156,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
             public void onClick(View v) {
                 if(Constant.isAudioPlaying){
                     if(Constant.nowPlayingAudio!=null){
-                        Log.d(LOG_TAG,Constant.nowPlayingAudio.getTitle());
-                        Log.d(LOG_TAG,Constant.nowPlayingAudio.getPageUrl());
+                        Log.i(LOG_TAG,Constant.nowPlayingAudio.getTitle());
+                        Log.i(LOG_TAG,Constant.nowPlayingAudio.getPageUrl());
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constant.nowPlayingAudio.getPageUrl()));
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -170,8 +167,8 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
 
                 }else{
                     if(Constant.nowPlayingFile!=null){
-                        Log.d(LOG_TAG,Constant.nowPlayingFile.getTitle());
-                        Log.d(LOG_TAG,Constant.nowPlayingFile.getPageUrl());
+                        Log.i(LOG_TAG,Constant.nowPlayingFile.getTitle());
+                        Log.i(LOG_TAG,Constant.nowPlayingFile.getPageUrl());
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Constant.nowPlayingFile.getPageUrl()));
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
@@ -208,7 +205,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
                 }
                 else{
                     handler.removeCallbacks(this);
-                    Log.d("Runnable","ok");
+                    Log.i("Runnable","ok");
                 }
 
             }
@@ -242,7 +239,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     protected void onDestroy() {
         super.onDestroy();
         WikipediaSummaryCacheController.getInstance(context).destroyTTS();
-        Log.d(LOG_TAG,"on stop activity");
+        Log.i(LOG_TAG,"on stop activity");
         TTSButtonListener.onStopActivity();
 
     }
@@ -285,16 +282,16 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     private void startSeekBar(){
         duration = MediaPlayerController.getDuration();
         seekBar.setMax(duration);
-        Log.d(LOG_TAG,"onMediaPlayerPlaying");
+        Log.i(LOG_TAG,"onMediaPlayerPlaying");
         amoungToupdate = duration / 1000;
-        Log.d(LOG_TAG,"duration: "+duration+"\n" +
+        Log.i(LOG_TAG,"duration: "+duration+"\n" +
                 "amoungToupdate: "+amoungToupdate);
         handler.postDelayed(runnable, amoungToupdate);
     }
 
     @Override
     public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
-        Log.d(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
+        Log.i(LOG_TAG, String.format("onCacheAvailable. percents: %d, file: %s", percentsAvailable, cacheFile));
         if(percentsAvailable==100){
             //cacheControlCallback.onCurrentFileCached();
         }
@@ -332,7 +329,7 @@ public class RadioActivity extends AppCompatActivity implements MediaPlayerCallb
     /*
     @Override
     protected void onDestroy() {
-        Log.d(LOG_TAG,"on stop activity");
+        Log.i(LOG_TAG,"on stop activity");
         TTSButtonListener.onStopActivity();
         super.onStop();
     }*/

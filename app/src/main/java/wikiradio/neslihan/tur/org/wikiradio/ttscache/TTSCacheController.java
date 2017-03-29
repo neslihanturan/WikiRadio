@@ -45,7 +45,7 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(LOG_TAG," onHandleIntent");
+        Log.i(LOG_TAG," onHandleIntent");
         //RadioActivity.ttsCacheControlCallback = this;
         TTSButtonListener.cacheControlCallbackForTTS = this;
         AudioFileButtonListener.cacheControlCallbackForTTS = this;
@@ -60,7 +60,7 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
 
             ttobj.stop();
             ttobj.shutdown();
-            Log.d(LOG_TAG, "TTS Destroyed");
+            Log.i(LOG_TAG, "TTS Destroyed");
         }
     }
 
@@ -68,14 +68,14 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
         if(ttobj == null){
             ttobj = new TextToSpeech(context,this);
         }else if (cachedFiles.size()<4){
-            Log.d(LOG_TAG,"cacheFilesOnBackground");
+            Log.i(LOG_TAG,"cacheFilesOnBackground");
             DataUtils.getRandomSummary(this);
         }
     }
 
     @Override
     public void onSuccess(TTSFile ttsFile) {
-        Log.d(LOG_TAG,"onSuccess Summary");
+        Log.i(LOG_TAG,"onSuccess Summary");
         HashMap<String, String> myHashRender = new HashMap();
 
         File folder = new File(Environment.getExternalStorageDirectory() + "/ttscache");
@@ -90,27 +90,27 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
         ttobj.synthesizeToFile(textToConvert, myHashRender, destinationFileName); //this process is asyncronous
         ttsFile.setFileName(destinationFileName);
         candidateFile = ttsFile;
-        Log.d(LOG_TAG,"onSuccess Summary2" + candidateFile.getFileName());
+        Log.i(LOG_TAG,"onSuccess Summary2" + candidateFile.getFileName());
         ttobj.setOnUtteranceCompletedListener(this);
 
     }
 
     @Override
     public void onError() {
-        Log.d(LOG_TAG,"onError Summary");
+        Log.i(LOG_TAG,"onError Summary");
     }
 
     //on TTS init
     @Override
     public void onInit(int status) {
-        Log.d(LOG_TAG,"onInit TTS");
+        Log.i(LOG_TAG,"onInit TTS");
         ttobj.setLanguage(Locale.US);
         cacheFilesOnBackground();
     }
 
     @Override
     public void onUtteranceCompleted(String utteranceId) {
-        Log.d(LOG_TAG,"onUtteranceCompleted TTS:" + candidateFile.getFileName());
+        Log.i(LOG_TAG,"onUtteranceCompleted TTS:" + candidateFile.getFileName());
         cachedFiles.add(candidateFile);
         TTSButtonListener.onNewFileCached();
         cacheFilesOnBackground();
@@ -120,31 +120,31 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     @Override
     public void onFileConsumed(TTSFile curPtr) {
         //RadioActivity.replaceToast("TTS-onFileConsumed");
-        Log.d(LOG_TAG,"onFileConsumed");
+        Log.i(LOG_TAG,"onFileConsumed");
         //cachedFiles.contains(curPtr)
         if(selectedFile!=null && cachedFiles.contains(selectedFile)){
-            Log.d(LOG_TAG,"onFileConsumed2 removed from array:"+selectedFile.getFileName());
+            Log.i(LOG_TAG,"onFileConsumed2 removed from array:"+selectedFile.getFileName());
             cachedFiles.remove(selectedFile);
         }
 
         File fdelete = new File(curPtr.getFileName());
         if (fdelete.delete()) {
-            Log.d(LOG_TAG,"onfileconsumedfile Deleted :"+curPtr.getFileName());
+            Log.i(LOG_TAG,"onfileconsumedfile Deleted :"+curPtr.getFileName());
         } else {
-            Log.d(LOG_TAG,"onfileconsumedfile not Deleted :"+curPtr.getFileName());
+            Log.i(LOG_TAG,"onfileconsumedfile not Deleted :"+curPtr.getFileName());
         }
     }
 
     @Override
     public void onNextFileRequested() {
         //RadioActivity.replaceToast("TTS-onNextFileRequested");
-        Log.d(LOG_TAG,"onNextFileRequested");
+        Log.i(LOG_TAG,"onNextFileRequested");
         selectNextFile();
     }
 
     @Override
     public void onEmptyCache() {
-        Log.d(LOG_TAG,"worked");
+        Log.i(LOG_TAG,"worked");
         File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/ttscache/");
         if (dir.isDirectory())
         {
@@ -152,18 +152,18 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
             for (int i = 0; i < children.length; i++)
             {
                 new File(dir, children[i]).delete();
-                Log.d(LOG_TAG,"file is deleted");
+                Log.i(LOG_TAG,"file is deleted");
             }
         }
     }
 
     private FileDescriptor selectNextFile(){
-        Log.d(LOG_TAG,"selectNextFile");
+        Log.i(LOG_TAG,"selectNextFile");
         if(cachedFiles.size()<=0){
             //RadioActivity.replaceToast("TTS-cached files is empty");
-            Log.d(LOG_TAG,"cachedFiles not empty size is:"+cachedFiles.size());
+            Log.i(LOG_TAG,"cachedFiles not empty size is:"+cachedFiles.size());
             for(int i = 0; i<cachedFiles.size();i++){
-                Log.d(LOG_TAG,i+". element is:"+cachedFiles.get(i));
+                Log.i(LOG_TAG,i+". element is:"+cachedFiles.get(i));
             }
             selectedFile = null;
             return null;
@@ -187,11 +187,11 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
     }
 
     public static TTSFile getCurrentFile(){
-        Log.d(LOG_TAG,"getCurrentFile");
+        Log.i(LOG_TAG,"getCurrentFile");
         if(selectedFile !=null){
             /*FileDescriptor fd = null;
             try {
-                Log.d(LOG_TAG,"selected file name :"+selectedFile.getFileName());
+                Log.i(LOG_TAG,"selected file name :"+selectedFile.getFileName());
                 FileInputStream fileInputStream = new FileInputStream(new File(selectedFile.getFileName()));
                 fd = fileInputStream.getFD();
             } catch (FileNotFoundException e) {
@@ -200,7 +200,7 @@ public class TTSCacheController extends Service implements SummaryCallback, Text
                 e.printStackTrace();
             }
             selectedFile.setFileDescriptor(fd);*/
-            Log.d(LOG_TAG,"getCurrentFile2"+selectedFile.getFileName());
+            Log.i(LOG_TAG,"getCurrentFile2"+selectedFile.getFileName());
             return selectedFile;
         }else {
             return null;
